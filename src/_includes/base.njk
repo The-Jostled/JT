@@ -6,22 +6,32 @@
   <title>{% if title and title != site.title %}{{ title }} · {{ site.title }}{% else %}{{ site.title }} — {{ site.handle }}{% endif %}</title>
   <meta name="description" content="{{ summary or description or site.description }}">
   <meta name="color-scheme" content="light dark">
-  <link rel="icon" href="{{ '/favicon.svg' | url }}" type="image/svg+xml">
-  <link rel="stylesheet" href="{{ '/css/style.css' | url }}">
-  <link rel="stylesheet" href="{{ '/css/prism.css' | url }}">
-  <script src="{{ '/js/site.js' | url }}" defer></script>
+  {#- The one inline script on the site: applies a saved light/dark choice before
+      first paint so the page never flashes the wrong theme. Everything else is
+      in /js/site.js. Root-relative URLs here are prefixed by the HTML base plugin. #}
+  <script>try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/prism.css">
+  <link rel="alternate" type="application/json" href="/search.json" data-search-index>
+  <script src="/js/site.js" defer></script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
   <header class="site-header">
     <div class="wrap">
-      <a class="brand" href="{{ '/' | url }}">{{ site.title }} <span class="handle">/ {{ site.handle }}</span></a>
+      <a class="brand" href="/">{{ site.title }} <span class="handle">/ {{ site.handle }}</span></a>
       <nav aria-label="Primary">
-        <a href="{{ '/writeups/' | url }}" {% if page.url.startsWith('/writeups/') %}aria-current="page"{% endif %}>Writeups</a>
-        <a href="{{ '/projects/' | url }}" {% if page.url.startsWith('/projects/') %}aria-current="page"{% endif %}>Projects</a>
-        <a href="{{ '/blog/' | url }}" {% if page.url.startsWith('/blog/') %}aria-current="page"{% endif %}>Blog</a>
-        <a href="{{ '/about/' | url }}" {% if page.url == '/about/' %}aria-current="page"{% endif %}>About</a>
+        <a href="/writeups/" {% if page.url.startsWith('/writeups/') %}aria-current="page"{% endif %}>Writeups</a>
+        <a href="/projects/" {% if page.url.startsWith('/projects/') %}aria-current="page"{% endif %}>Projects</a>
+        <a href="/blog/" {% if page.url.startsWith('/blog/') %}aria-current="page"{% endif %}>Blog</a>
+        <a href="/about/" {% if page.url == '/about/' %}aria-current="page"{% endif %}>About</a>
       </nav>
+      {#- Both need JavaScript, so they stay hidden until site.js shows them. #}
+      <div class="site-tools" data-site-tools hidden>
+        <button type="button" class="tool" data-search-open aria-keyshortcuts="/">Search <kbd aria-hidden="true">/</kbd></button>
+        <button type="button" class="tool" data-theme-toggle></button>
+      </div>
     </div>
   </header>
 

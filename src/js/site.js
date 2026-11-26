@@ -19,6 +19,224 @@
     pick(next, true);
   }
 
+  /* ---------- Header tools: theme toggle ----------
+     The saved choice is applied before first paint by the inline script in
+     base.njk; this only wires up the button. With no saved choice the site
+     follows the system setting. */
+  (function theme() {
+    var tools = document.querySelector("[data-site-tools]");
+    var btn = document.querySelector("[data-theme-toggle]");
+    if (!tools || !btn) return;
+    var root = document.documentElement;
+    var system = window.matchMedia("(prefers-color-scheme: dark)");
+
+    function current() {
+      return root.getAttribute("data-theme") || (system.matches ? "dark" : "light");
+    }
+    function label() {
+      var next = current() === "dark" ? "light" : "dark";
+      btn.textContent = next === "dark" ? "Dark" : "Light";
+      btn.setAttribute("aria-label", "Switch to " + next + " theme");
+    }
+    btn.addEventListener("click", function () {
+      var next = current() === "dark" ? "light" : "dark";
+      root.setAttribute("data-theme", next);
+      try { localStorage.setItem("theme", next); } catch (e) { /* private mode: lasts for this page only */ }
+      label();
+    });
+    if (system.addEventListener) system.addEventListener("change", label);
+    label();
+    tools.hidden = false;
+  })();
+
+  /* ---------- Search: "/" or the header button ----------
+     The index (/search.json) is fetched the first time search is opened. */
+  (function search() {
+    var opener = document.querySelector("[data-search-open]");
+    var link = document.querySelector("[data-search-index]");
+    if (!opener || !link || !window.HTMLDialogElement) { if (opener) opener.hidden = true; return; }
+
+    var dialog, input, status, results, index = null;
+
+    function build() {
+      dialog = document.createElement("dialog");
+      dialog.className = "search";
+      dialog.setAttribute("aria-label", "Search the site");
+      var form = document.createElement("form");
+      form.method = "dialog";
+      form.className = "search-box";
+      input = document.createElement("input");
+      input.type = "search";
+      input.placeholder = "Search writeups, projects and posts";
+      input.setAttribute("aria-label", "Search writeups, projects and posts");
+      input.autocomplete = "off";
+      var close = document.createElement("button");
+      close.className = "chip";
+      close.textContent = "Close";
+      form.appendChild(input); form.appendChild(close);
+      status = document.createElement("p");
+      status.className = "search-status";
+      status.setAttribute("role", "status");
+      results = document.createElement("ul");
+      results.className = "search-results";
+      dialog.appendChild(form); dialog.appendChild(status); dialog.appendChild(results);
+      document.body.appendChild(dialog);
+
+      input.addEventListener("input", render);
+      // Enter in the box opens the top result instead of closing the dialog
+      form.addEventListener("submit", function (e) {
+        var first = results.querySelector("a");
+        if (document.activeElement === input && first) { e.preventDefault(); first.click(); }
+      });
+      // Arrow keys walk between the box and the results
+      dialog.addEventListener("keydown", function (e) {
+        if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
+        var stops = [input].concat(all(results, "a"));
+        var at = stops.indexOf(document.activeElement);
+        var next = at + (e.key === "ArrowDown" ? 1 : -1);
+        if (at === -1 || next < 0 || next >= stops.length) return;
+        e.preventDefault();
+        stops[next].focus();
+      });
+      // A click on the backdrop closes it
+      dialog.addEventListener("click", function (e) { if (e.target === dialog) dialog.close(); });
+    }
+
+    function render() {
+      results.textContent = "";
+      if (!index) { status.textContent = "Loading…"; return; }
+      var words = input.value.toLowerCase().split(/\s+/).filter(Boolean);
+      var hits = index.filter(function (item) {
+        return words.every(function (w) { return item.hay.indexOf(w) !== -1; });
+      });
+      // Title matches first; the index is already newest-first
+      if (words.length) {
+        hits.sort(function (a, b) {
+          var ta = words.every(function (w) { return a.title.toLowerCase().indexOf(w) !== -1; });
+          var tb = words.every(function (w) { return b.title.toLowerCase().indexOf(w) !== -1; });
+          return (tb ? 1 : 0) - (ta ? 1 : 0);
+        });
+      }
+      status.textContent = !words.length ? "Everything, newest first. Try a tool, a CVE or a technique ID."
+        : hits.length ? hits.length + (hits.length === 1 ? " result" : " results")
+        : "Nothing matches “" + input.value + "”.";
+      hits.forEach(function (item) {
+        var li = document.createElement("li");
+        var a = document.createElement("a");
+        a.href = item.url;
+        if (item.category) a.className = "cat-" + item.category.toLowerCase();
+        var title = document.createElement("strong");
+        var pill = document.createElement("span");
+        pill.className = "cat-pill";
+        pill.textContent = item.category || item.section.replace(/s$/, "");
+        title.appendChild(pill);
+        title.appendChild(document.createTextNode(item.title));
+        var summary = document.createElement("small");
+        summary.textContent = item.summary;
+        a.appendChild(title); a.appendChild(summary);
+        li.appendChild(a);
+        results.appendChild(li);
+      });
+    }
+
+    function open() {
+      if (!dialog) build();
+      if (dialog.open) return;
+      input.value = "";
+      dialog.showModal();
+      render();
+      if (index) return;
+      fetch(link.href).then(function (r) { return r.json(); }).then(function (items) {
+        index = items.map(function (item) {
+          item.hay = [item.title, item.summary, item.keywords, item.section, item.category].join(" ").toLowerCase();
+          return item;
+        });
+        render();
+      }).catch(function () { status.textContent = "Search could not load."; });
+    }
+
+    opener.addEventListener("click", open);
+    document.addEventListener("keydown", function (e) {
+      if (e.key !== "/" || e.ctrlKey || e.metaKey || e.altKey) return;
+      var t = e.target;
+      if (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)) return;
+      e.preventDefault();
+      open();
+    });
+  })();
+
+  /* ---------- Copy button on code blocks ---------- */
+  (function copyButtons() {
+    if (!navigator.clipboard) return;
+    all(document, ".prose pre").forEach(function (pre) {
+      var wrap = document.createElement("div");
+      wrap.className = "code-wrap";
+      pre.parentNode.insertBefore(wrap, pre);
+      wrap.appendChild(pre);
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "copy-btn";
+      btn.textContent = "Copy";
+      btn.setAttribute("aria-label", "Copy code to clipboard");
+      btn.addEventListener("click", function () {
+        function flash(text) {
+          btn.textContent = text;
+          btn.classList.add("is-done");
+          setTimeout(function () { btn.textContent = "Copy"; btn.classList.remove("is-done"); }, 1600);
+        }
+        navigator.clipboard.writeText(pre.textContent.replace(/\n$/, ""))
+          .then(function () { flash("Copied"); }, function () { flash("Copy failed"); });
+      });
+      wrap.appendChild(btn);
+    });
+  })();
+
+  /* ---------- Homelab diagram: replay an exercise ----------
+     Lights the path an exercise takes, edge by edge, then says what it raised
+     in Wazuh. With reduced motion the whole path lights at once. */
+  (function homelab() {
+    var box = document.querySelector("[data-homelab-play]");
+    if (!box) return;
+    var fig = box.closest("figure");
+    var svg = fig.querySelector("svg");
+    var readout = fig.querySelector("[data-homelab-readout]");
+    var buttons = all(box, "button");
+    var timers = [];
+    var STEP = reducedMotion ? 0 : 1200;
+
+    function reset() {
+      timers.forEach(clearTimeout);
+      timers = [];
+      all(svg, ".is-lit").forEach(function (el) { el.classList.remove("is-lit"); });
+      buttons.forEach(function (b) { b.setAttribute("aria-pressed", "false"); });
+      readout.textContent = "";
+    }
+    function light(edgeId) {
+      var edge = svg.querySelector('[data-edge="' + edgeId + '"]');
+      if (edge) edge.classList.add("is-lit");
+      edgeId.split("-").forEach(function (n) {
+        var node = svg.querySelector('[data-node="' + n + '"]');
+        if (node) node.classList.add("is-lit");
+      });
+    }
+    buttons.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var wasOn = btn.getAttribute("aria-pressed") === "true";
+        reset();
+        if (wasOn) return; // pressing the active exercise clears it
+        btn.setAttribute("aria-pressed", "true");
+        var seq = btn.getAttribute("data-seq").split(" ");
+        seq.forEach(function (edgeId, k) {
+          timers.push(setTimeout(function () { light(edgeId); }, k * STEP));
+        });
+        timers.push(setTimeout(function () {
+          readout.textContent = btn.getAttribute("data-result");
+        }, seq.length * STEP));
+      });
+    });
+    box.hidden = false;
+  })();
+
   /* ---------- Attack path: stepper + reading-position bar ----------
      Without JS every step panel is listed and the nodes are plain links.
      With JS the nodes select a step, one panel shows at a time, and the
@@ -138,8 +356,8 @@
         if (i >= 0) select(i); // a manual pick stays until you read into another step
       }
       if (!bar) return;
-      // The bar takes over once the diagram itself has scrolled away
-      var show = i >= 0 && nav.querySelector(".ap-scroll").getBoundingClientRect().bottom < 0;
+      // The bar takes over once the diagram and its panel have scrolled away
+      var show = i >= 0 && list.getBoundingClientRect().bottom < 0;
       bar.hidden = !show;
       if (!show) return;
       barSegs.forEach(function (li, k) {
@@ -162,7 +380,7 @@
     var io = new IntersectionObserver(update, { rootMargin: "0px 0px -65% 0px", threshold: [0, 1] });
     headings.forEach(function (h) { io.observe(h); });
     var navIO = new IntersectionObserver(update, { threshold: 0 });
-    navIO.observe(nav.querySelector(".ap-scroll"));
+    navIO.observe(list);
     update();
   })();
 

@@ -9,37 +9,37 @@
 <text class="d-sub" x="370" y="100" text-anchor="middle">edge firewall · NAT · DHCP</text>
 <path class="d-wire" d="M370 112V150M86 150H654M86 150V178M256 150V178M484 150V178M654 150V178"/>
 <text class="d-sub" x="380" y="138">internal network (isolated)</text>
-<g class="d-node d-node-kali" tabindex="0" role="img" aria-label="Kali, the attacker. Attacks the Windows Server domain controller and Metasploitable.">
+<g class="d-node d-node-kali" data-node="kali" tabindex="0" role="img" aria-label="Kali, the attacker. Attacks the Windows Server domain controller and Metasploitable.">
 <rect class="d-box" x="16" y="178" width="140" height="58" rx="6"/>
 <text class="d-title" x="86" y="203" text-anchor="middle">Kali</text>
 <text class="d-sub" x="86" y="221" text-anchor="middle">attacker</text>
 </g>
-<g class="d-node d-node-wazuh" tabindex="0" role="img" aria-label="Wazuh SIEM on Ubuntu Server. Receives logs from the Wazuh agent on the domain controller.">
+<g class="d-node d-node-wazuh" data-node="wazuh" tabindex="0" role="img" aria-label="Wazuh SIEM on Ubuntu Server. Receives logs from the Wazuh agent on the domain controller.">
 <rect class="d-box" x="186" y="178" width="140" height="58" rx="6"/>
 <text class="d-title" x="256" y="203" text-anchor="middle">Wazuh SIEM</text>
 <text class="d-sub" x="256" y="221" text-anchor="middle">Ubuntu Server</text>
 </g>
-<g class="d-node" tabindex="0" role="img" aria-label="Windows Server domain controller, populated with BadBlood. Runs the Wazuh agent.">
+<g class="d-node" data-node="dc" tabindex="0" role="img" aria-label="Windows Server domain controller, populated with BadBlood. Runs the Wazuh agent.">
 <rect class="d-box" x="414" y="178" width="140" height="58" rx="6"/>
 <text class="d-title" x="484" y="203" text-anchor="middle">Windows Server DC</text>
 <text class="d-sub" x="484" y="221" text-anchor="middle">AD + BadBlood</text>
 </g>
-<g class="d-node" tabindex="0" role="img" aria-label="Metasploitable, the legacy target.">
+<g class="d-node" data-node="meta" tabindex="0" role="img" aria-label="Metasploitable, the legacy target.">
 <rect class="d-box" x="584" y="178" width="140" height="58" rx="6"/>
 <text class="d-title" x="654" y="203" text-anchor="middle">Metasploitable</text>
 <text class="d-sub" x="654" y="221" text-anchor="middle">legacy target</text>
 </g>
-<g class="d-edge d-edge-attack">
+<g class="d-edge d-edge-attack" data-edge="kali-dc">
 <path class="d-line" d="M106 236V282H464V245"/>
 <path class="d-head" d="M459 246l5 -9l5 9z"/>
 <text class="d-sub" x="285" y="276" text-anchor="middle">attacks</text>
 </g>
-<g class="d-edge d-edge-attack">
+<g class="d-edge d-edge-attack" data-edge="kali-meta">
 <path class="d-line" d="M66 236V316H654V245"/>
 <path class="d-head" d="M649 246l5 -9l5 9z"/>
 <text class="d-sub" x="360" y="310" text-anchor="middle">attacks</text>
 </g>
-<g class="d-edge d-edge-logs">
+<g class="d-edge d-edge-logs" data-edge="dc-wazuh">
 <path class="d-line" d="M414 207H335"/>
 <path class="d-head" d="M336 202l-9 5l9 5z"/>
 <text class="d-sub" x="370" y="198" text-anchor="middle">Wazuh agent</text>

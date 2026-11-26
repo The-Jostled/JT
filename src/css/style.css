@@ -15,8 +15,11 @@
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
   --measure: 72ch;
 }
+/* Dark palette. It applies from the system preference unless the visitor chose
+   light, and from the header toggle (data-theme="dark" on <html>) regardless.
+   The two blocks must stay identical. */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --bg: #131416;
     --bg-elev: #1b1d20;
     --fg: #e6e6e3;
@@ -29,6 +32,20 @@
     --defend: #74bccb;
   }
 }
+:root[data-theme="dark"] {
+  --bg: #131416;
+  --bg-elev: #1b1d20;
+  --fg: #e6e6e3;
+  --fg-muted: #a3a39d;
+  --line: #2a2d31;
+  --accent: #7fb3d9;
+  --accent-fg: #0f1a22;
+  --code-bg: #1b1d20;
+  --attack: #e0897f;
+  --defend: #74bccb;
+  color-scheme: dark;
+}
+:root[data-theme="light"] { color-scheme: light; }
 
 /* ---------- Base ---------- */
 * { box-sizing: border-box; }
@@ -390,9 +407,62 @@ h1 { font-size: 2.2rem; font-weight: 720; letter-spacing: -0.02em; }
 .tech.is-dim { opacity: 0.35; }
 .tech.is-lit { border-color: var(--accent); box-shadow: inset 0 0 0 2px var(--accent); }
 
+/* ---------- Header tools: search and theme ---------- */
+.site-tools { display: flex; gap: 0.4rem; }
+.tool { font: inherit; font-size: 0.85rem; line-height: 1.4; padding: 0.2rem 0.6rem; border: 1px solid var(--line); border-radius: 6px; background: var(--bg-elev); color: var(--fg-muted); cursor: pointer; }
+.tool:hover { border-color: var(--accent); color: var(--fg); }
+.tool kbd { margin-left: 0.25rem; padding: 0 0.3rem; border: 1px solid var(--line); border-radius: 3px; background: var(--bg); font-size: 0.75rem; }
+@media (min-width: 40.01rem) { .site-header nav { margin-left: auto; } }
+
+/* ---------- Search dialog ---------- */
+.search { width: min(100% - 2rem, 38rem); max-height: min(80vh, 34rem); margin: 10vh auto auto; padding: 0; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); color: var(--fg); overflow: hidden; }
+.search[open] { display: flex; flex-direction: column; }
+.search::backdrop { background: rgb(0 0 0 / 0.45); }
+.search-box { display: flex; gap: 0.5rem; padding: 0.7rem; border-bottom: 1px solid var(--line); }
+.search-box input { flex: 1; min-width: 0; font: inherit; padding: 0.45rem 0.7rem; border: 1px solid var(--line); border-radius: 6px; background: var(--bg-elev); color: var(--fg); }
+.search-status { margin: 0; padding: 0.5rem 0.9rem 0; font-size: 0.8rem; color: var(--fg-muted); }
+.search-results { list-style: none; margin: 0; padding: 0.4rem; overflow-y: auto; }
+.search-results a { display: block; padding: 0.55rem 0.6rem; border-radius: 6px; color: inherit; text-decoration: none; }
+.search-results a:hover, .search-results a:focus-visible { background: var(--bg-elev); }
+.search-results strong { display: block; color: var(--accent); font-weight: 600; }
+.search-results small { display: block; margin-top: 0.15rem; font-size: 0.85rem; color: var(--fg-muted); }
+.search-results .cat-pill { margin-right: 0.4rem; }
+
+/* ---------- Copy button on code blocks ---------- */
+.code-wrap { position: relative; }
+.copy-btn { position: absolute; top: 0.4rem; right: 0.4rem; font: inherit; font-size: 0.75rem; line-height: 1.4; padding: 0.1rem 0.5rem; border: 1px solid var(--line); border-radius: 4px; background: var(--bg); color: var(--fg-muted); cursor: pointer; opacity: 0; }
+.code-wrap:hover .copy-btn, .copy-btn:focus-visible, .copy-btn.is-done { opacity: 1; }
+.copy-btn:hover { border-color: var(--accent); color: var(--fg); }
+@media (hover: none) { .copy-btn { opacity: 1; } } /* no hover on touch, so always shown */
+
+/* ---------- Homelab: replay an exercise ---------- */
+.d-play { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem; margin-top: 0.8rem; }
+.d-play .chip-label { flex: 0 0 auto; margin-right: 0.3rem; }
+.d-readout { min-height: 1.6em; margin: 0.6rem 0 0; padding-left: 0.75rem; border-left: 2px solid var(--defend); font-size: 0.93rem; }
+.d-readout:empty { border-left-color: transparent; }
+/* A replayed edge looks like the hover highlight; its dashes flow twice, then hold */
+.d-node.is-lit .d-box { stroke: var(--fg); stroke-width: 2.5; }
+.d-edge-attack.is-lit .d-line { stroke: var(--attack); stroke-width: 2.5; stroke-dasharray: 7 5; }
+.d-edge-attack.is-lit .d-head { fill: var(--attack); }
+.d-edge-attack.is-lit text { fill: var(--attack); font-weight: 700; }
+.d-edge-logs.is-lit .d-line { stroke: var(--defend); stroke-width: 2.5; stroke-dasharray: 7 5; }
+.d-edge-logs.is-lit .d-head { fill: var(--defend); }
+.d-edge-logs.is-lit text { fill: var(--defend); font-weight: 700; }
+@media (prefers-reduced-motion: no-preference) {
+  .d-edge.is-lit .d-line { animation: d-flow 0.6s linear 2; }
+}
+
 /* =====================================================================
    Phones and touch
    ===================================================================== */
+
+/* On a phone the stacked step list is a full screen of scrolling before the
+   prose. When the stepper is running, the panel (step n of N, Previous/Next)
+   does the same job, so the list is dropped. Without JS it still shows. */
+@media (max-width: 40rem) {
+  .is-stepper .ap-scroll { display: none; }
+  .is-stepper .ap-steps { margin-top: 0; }
+}
 
 /* Step panel: long commands scroll inside their own box instead of widening the page */
 .ap-facts { grid-template-columns: repeat(auto-fit, minmax(min(13rem, 100%), 1fr)); }
@@ -420,7 +490,10 @@ h1 { font-size: 2.2rem; font-weight: 720; letter-spacing: -0.02em; }
   .hero { margin-top: -2rem; }
   .section-head { flex-wrap: wrap; }
   .section-head h2 { font-size: 1.3rem; }
-  .site-header .wrap { gap: 0.3rem 1.5rem; padding-block: 0.7rem 0.4rem; }
+  .site-header .wrap { gap: 0.3rem 1rem; padding-block: 0.7rem 0.4rem; }
+  /* Name and tools share the first row; the nav gets its own row underneath */
+  .site-tools { margin-left: auto; }
+  .site-header nav { order: 3; flex-basis: 100%; }
   .featured { padding: 1rem 1rem 1.1rem; }
   .featured h3 { font-size: 1.15rem; }
   .ap-step { padding: 0.8rem 0.9rem 0.9rem; }
@@ -441,6 +514,9 @@ h1 { font-size: 2.2rem; font-weight: 720; letter-spacing: -0.02em; }
   .chairs-tabs .chip { padding: 0.5rem 0.9rem; }
   .tech { padding: 0.6rem 0.5rem; font-size: 0.78rem; }
   .btn { padding: 0.65rem 1.05rem; }
+  .tool { padding: 0.5rem 0.8rem; }
+  .tool kbd { display: none; } /* no "/" key to press on a touch screen */
+  .copy-btn { padding: 0.35rem 0.7rem; }
   .cve-list a, .ap-step-foot a, .chair-source a, .section-head a { display: inline-block; padding-block: 0.4rem; }
   .ap-progress-segs a { padding: 0.85rem 0; }
   .site-footer .links a { padding-block: 0.5rem; display: inline-block; }

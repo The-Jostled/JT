@@ -11,8 +11,8 @@ title: Joshua Thomas
     <h1>Joshua Thomas</h1>
     <p class="lede" data-typed>Cybersecurity student at NHTI with a defensive certification already in hand and an offensive one in progress. I document what I break, what I detect, and what I learned doing it.</p>
     <div class="cta">
-      <a class="btn primary" href="{{ '/writeups/' | url }}">Read the writeups</a>
-      <a class="btn" href="{{ '/about/' | url }}">About me</a>
+      <a class="btn primary" href="{{ '/writeups/' }}">Read the writeups</a>
+      <a class="btn" href="{{ '/about/' }}">About me</a>
     </div>
     <ul class="creds" aria-label="Credentials">
       <li><strong>HTB CDSA</strong> — Certified Defensive Security Analyst</li>
@@ -55,23 +55,23 @@ title: Joshua Thomas
         <p>{{ c.defend }}</p>
       </div>
     </div>
-    <p class="chair-source">From <a href="{{ c.url | url }}">{{ c.source }}</a></p>
+    <p class="chair-source">From <a href="{{ c.url }}">{{ c.source }}</a></p>
   </article>
   {%- endfor %}
 </section>
 
 <div class="section-head">
   <h2>Featured writeup</h2>
-  <a href="{{ '/writeups/' | url }}">All writeups →</a>
+  <a href="{{ '/writeups/' }}">All writeups →</a>
 </div>
 <article class="featured cat-{{ featured.data.category | lower }}">
   <p class="card-meta"><span class="cat-pill">{{ featured.data.category }}</span> {{ featured.data.platform }} · {{ featured.data.difficulty }} · {{ featured.data.os }}</p>
-  <h3><a href="{{ featured.url | url }}">{{ featured.data.title }}</a></h3>
+  <h3><a href="{{ featured.url }}">{{ featured.data.title }}</a></h3>
   <p>{{ featured.data.summary }}</p>
   {%- if featured.data.attackPath %}
   {%- set attackPath = featured.data.attackPath %}
   {%- set category = featured.data.category %}
-  {%- set apBase = featured.url | url %}
+  {%- set apBase = featured.url %}
   {%- set apCompact = true %}
   {% include "attack-path.njk" %}
   {%- endif %}
@@ -86,7 +86,7 @@ title: Joshua Thomas
 
 <div class="section-head">
   <h2>Projects</h2>
-  <a href="{{ '/projects/' | url }}">All projects →</a>
+  <a href="{{ '/projects/' }}">All projects →</a>
 </div>
 <ul class="cards">
   {% for item in collections.projects | head(3) %}{% include "list-item.njk" %}{% endfor %}
@@ -94,7 +94,7 @@ title: Joshua Thomas
 
 <div class="section-head">
   <h2>Blog</h2>
-  <a href="{{ '/blog/' | url }}">All posts →</a>
+  <a href="{{ '/blog/' }}">All posts →</a>
 </div>
 <ul class="cards">
   {% for item in collections.blog | head(3) %}{% include "list-item.njk" %}{% endfor %}

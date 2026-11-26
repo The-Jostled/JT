@@ -16,6 +16,13 @@ I built this lab to have somewhere I could run an attack and then go look at wha
 {% include "diagrams/homelab.svg.njk" %}
 </div>
 <p class="swipe-hint" aria-hidden="true">Swipe sideways to see the whole diagram →</p>
+<div class="d-play" data-homelab-play hidden>
+<span class="chip-label">Replay an exercise</span>
+<button type="button" class="chip" aria-pressed="false" data-seq="kali-dc dc-wazuh" data-result="In Wazuh: a storm of Event ID 4625 failed logons from the Kali address.">RDP brute force</button>
+<button type="button" class="chip" aria-pressed="false" data-seq="kali-dc dc-wazuh" data-result="In Wazuh: the reconnaissance shows up in the domain controller's logs as it happens.">BloodHound enumeration</button>
+<button type="button" class="chip" aria-pressed="false" data-seq="dc-wazuh" data-result="In Wazuh: the built-in detection rules fire on the domain controller.">Mimikatz on the DC</button>
+</div>
+<p class="d-readout" data-homelab-readout role="status"></p>
 <figcaption>Hover, tap or focus <strong>Kali</strong> to trace its attack paths, or <strong>Wazuh SIEM</strong> to trace log forwarding.</figcaption>
 </figure>
 

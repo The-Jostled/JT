@@ -2,7 +2,7 @@
     list each writeup's ATT&CK technique IDs on the card. -#}
 {%- set isWriteup = item.data.section == "writeups" -%}
 <li class="card{% if item.data.category %} cat-{{ item.data.category | lower }}{% endif %}"{% if isWriteup and item.data.attack %} data-attack="{{ item.data.attack | join(' ') }}"{% endif %}{% if item.data.platform %} data-platform="{{ item.data.platform }}"{% endif %}{% if item.data.os %} data-os="{{ item.data.os }}"{% endif %}{% if item.data.difficulty %} data-difficulty="{{ item.data.difficulty }}"{% endif %}>
-  <a href="{{ item.url | url }}">
+  <a href="{{ item.url }}">
     <h3>{{ item.data.title }}</h3>
     <p>{{ item.data.summary }}</p>
     <p class="card-meta">

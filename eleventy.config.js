@@ -2,9 +2,13 @@ import syntaxHighlight from "@11ty/eleventy-plugin-syntaxhighlight";
 import markdownIt from "markdown-it";
 import markdownItAnchor from "markdown-it-anchor";
 import fs from "node:fs";
+import { EleventyHtmlBasePlugin } from "@11ty/eleventy";
 
 export default function (eleventyConfig) {
   eleventyConfig.addPlugin(syntaxHighlight);
+  // Applies the path prefix to root-relative links written by hand in Markdown
+  // (e.g. [x](/writeups/y/)), so the site also works under /repo-name/.
+  eleventyConfig.addPlugin(EleventyHtmlBasePlugin);
 
   // `attack` is both a global data file (_data/attack.json, the tactic matrix)
   // and a per-writeup front matter list of technique IDs. With deep merge on,
@@ -59,6 +63,31 @@ export default function (eleventyConfig) {
     for (const t of tactic.techniques) techniqueNames[t.id] = t.name;
   }
   eleventyConfig.addFilter("techniqueName", (id) => techniqueNames[id] || "");
+
+  // Search index for the "/" search box: one entry per writeup, project and post
+  eleventyConfig.addFilter("searchIndex", (items) => {
+    const prefix = (process.env.PATH_PREFIX || "/").replace(/\/$/, "");
+    return JSON.stringify(
+      (items || [])
+        .filter((i) => typeof i.data.section === "string" && i.data.title && i.data.date)
+        .sort((a, b) => b.date - a.date)
+        .map((i) => ({
+          url: prefix + i.url,
+          title: i.data.title,
+          summary: i.data.summary || "",
+          section: i.data.section,
+          category: i.data.category || "",
+          // Extra words to match on; never shown
+          keywords: [
+            ...(i.data.tags || []),
+            ...(Array.isArray(i.data.attack) ? i.data.attack : []),
+            ...(i.data.tools || []),
+            ...((i.data.cves || []).map((c) => c.id)),
+            i.data.platform, i.data.os, i.data.difficulty,
+          ].filter(Boolean).join(" "),
+        }))
+    );
+  });
 
   // Home page: the first item marked `featured: true`, else the newest
   eleventyConfig.addFilter("featuredItem", (items) =>

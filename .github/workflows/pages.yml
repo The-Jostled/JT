@@ -24,7 +24,13 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      # base_path is "/JT" for a project repo and "" for a user site
+      # (<name>.github.io), so links are right wherever this is deployed.
+      - id: pages
+        uses: actions/configure-pages@v5
       - run: npm run build
+        env:
+          PATH_PREFIX: ${{ steps.pages.outputs.base_path }}/
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
