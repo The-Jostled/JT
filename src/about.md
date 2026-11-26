@@ -2,6 +2,24 @@
 layout: base.njk
 title: About
 permalink: /about/
+# Nunjucks runs before Markdown on this page so the timeline include below works
+templateEngineOverride: njk,md
+timeline:
+  - label: "DigiPen ProjectFUN"
+    description: "Four summers of programming courses in Java and C#."
+  - label: "AP Computer Science A"
+    description: "Scored a 5."
+  - label: "Philosophy"
+    description: "Studied philosophy after high school."
+  - label: "Switch to cybersecurity"
+    description: "Same instinct as programming: take a system apart to see how it actually behaves."
+  - label: "HTB Certified Defensive Security Analyst (CDSA)"
+    description: "Earned. SOC analysis, log investigation and incident reporting."
+  - year: "Fall 2026"
+    label: "NHTI — Networking and Cybersecurity Operations A.S."
+    description: "Started the associate program in Concord, New Hampshire."
+  - label: "HTB Certified Penetration Testing Specialist (CPTS)"
+    description: "In progress, working through the Academy pathway."
 ---
 <div class="prose">
 
@@ -10,6 +28,10 @@ permalink: /about/
 I'm Joshua Thomas — online, usually **cyfhr**. I'm a cybersecurity student at NHTI in Concord, New Hampshire, in the Networking and Cybersecurity Operations A.S. program, and I spend most of my free time on Hack The Box.
 
 I came to security from a programming background: four summers at DigiPen's ProjectFUN program (Java, C#), AP Computer Science A, and a stretch of self-directed work in software and machine learning. What pulled me toward security was that it rewards the same thing I enjoy most — taking a system apart to understand how it actually behaves, not how it's supposed to.
+
+## How I got here
+
+{% include "timeline.njk" %}
 
 ## Where I'm at
 

@@ -153,4 +153,31 @@
     bar.hidden = false;
     apply();
   })();
+
+  /* ---------- About timeline: line draws, entries fade in, once ---------- */
+  (function timeline() {
+    var list = document.querySelector("[data-timeline]");
+    if (!list || reducedMotion || !hasIO) return; // stays in its final, fully visible state
+
+    list.classList.add("is-armed");
+    var lineIO = new IntersectionObserver(function (entries) {
+      if (entries.some(function (e) { return e.isIntersecting; })) {
+        list.classList.add("is-drawn");
+        lineIO.disconnect();
+      }
+    }, { threshold: 0.05 });
+    lineIO.observe(list);
+
+    var itemIO = new IntersectionObserver(function (entries) {
+      var n = 0;
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        // Entries that arrive together fade in top to bottom
+        e.target.style.transitionDelay = (n++ * 140) + "ms";
+        e.target.classList.add("is-in");
+        itemIO.unobserve(e.target);
+      });
+    }, { threshold: 0.4 });
+    Array.prototype.forEach.call(list.children, function (li) { itemIO.observe(li); });
+  })();
 })();

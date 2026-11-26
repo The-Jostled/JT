@@ -180,6 +180,24 @@ img { max-width: 100%; height: auto; border-radius: 6px; }
   .has-glance .prose { grid-column: 1; grid-row: 1; }
 }
 
+/* ---------- Timeline (about) ---------- */
+.timeline { list-style: none; position: relative; margin: 1.2rem 0 1.8rem; padding: 0 0 0 1.7rem; }
+.timeline::before { content: ""; position: absolute; left: calc(0.4rem - 1px); top: 0.5rem; bottom: 0.6rem; width: 2px; background: var(--line); transform-origin: top; }
+.timeline li { position: relative; margin: 0 0 1.1rem; }
+.timeline li:last-child { margin-bottom: 0; }
+.timeline li::before { content: ""; position: absolute; left: -1.7rem; top: 0.4rem; width: 0.8rem; height: 0.8rem; border: 2px solid var(--accent); border-radius: 50%; background: var(--bg); }
+.tl-year { display: block; font-family: var(--font-mono); font-size: 0.8rem; color: var(--fg-muted); }
+.tl-label { display: block; font-weight: 600; }
+.tl-desc { display: block; color: var(--fg-muted); font-size: 0.95rem; }
+/* Runs once: site.js arms it, then marks the list and each entry as they scroll in.
+   Without JS or with reduced motion nothing is armed, so everything is just visible. */
+@media (prefers-reduced-motion: no-preference) {
+  .timeline.is-armed::before { transform: scaleY(0); transition: transform 1.4s ease-out; }
+  .timeline.is-armed.is-drawn::before { transform: none; }
+  .timeline.is-armed li { opacity: 0; transition: opacity 0.5s ease-out; }
+  .timeline.is-armed li.is-in { opacity: 1; }
+}
+
 /* ---------- ATT&CK matrix (writeups index) ---------- */
 .attack-matrix { margin-top: 2rem; }
 .matrix-intro { color: var(--fg-muted); font-size: 0.92rem; max-width: var(--measure); margin-bottom: 0.8rem; }

@@ -1,0 +1,7 @@
+{#- Vertical timeline from the `timeline` front matter list. Output has no blank
+    lines so it stays one HTML block when included from Markdown. -#}
+<ol class="timeline" data-timeline>
+{%- for entry in timeline %}
+<li>{% if entry.year %}<span class="tl-year">{{ entry.year }}</span>{% endif %}<strong class="tl-label">{{ entry.label }}</strong>{% if entry.description %}<span class="tl-desc">{{ entry.description }}</span>{% endif %}</li>
+{%- endfor %}
+</ol>
