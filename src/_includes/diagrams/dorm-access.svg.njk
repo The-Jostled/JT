@@ -1,0 +1,31 @@
+<svg class="d-svg d-dorm" viewBox="0 0 740 262" role="img" aria-labelledby="dorm-title dorm-desc">
+<title id="dorm-title">Remote access path to the dorm desktop</title>
+<desc id="dorm-desc">The desktop holds an autossh reverse tunnel out through the campus firewall to a VPS. A laptop or phone reaches the desktop with SSH ProxyJump through the VPS. Tailscale and WireGuard from the desktop are both blocked by the campus firewall.</desc>
+<rect class="d-box" x="16" y="40" width="150" height="200" rx="6"/>
+<text class="d-title" x="91" y="64" text-anchor="middle">Desktop</text>
+<text class="d-sub" x="91" y="81" text-anchor="middle">dorm, headless</text>
+<rect class="d-box d-wall" x="318" y="26" width="14" height="228" rx="3"/>
+<text class="d-sub" x="325" y="16" text-anchor="middle">campus firewall</text>
+<text class="d-sub" x="176" y="111">Tailscale</text>
+<path class="d-line d-blocked" d="M166 120H302"/>
+<path class="d-cross" d="M303 114l10 12M313 114l-10 12"/>
+<text class="d-sub" x="344" y="124">blocked by campus firewall</text>
+<text class="d-sub" x="176" y="151">WireGuard</text>
+<path class="d-line d-blocked" d="M166 160H302"/>
+<path class="d-cross" d="M303 154l10 12M313 154l-10 12"/>
+<text class="d-sub" x="344" y="164">blocked by campus firewall</text>
+<text class="d-sub" x="176" y="201">autossh reverse tunnel</text>
+<path class="d-line" d="M166 210H437"/>
+<path class="d-head" d="M437 205l9 5l-9 5z"/>
+<text class="d-sub d-mono" x="176" y="227">-R 2222:localhost:22</text>
+<rect class="d-box" x="446" y="180" width="110" height="60" rx="6"/>
+<text class="d-title" x="501" y="206" text-anchor="middle">VPS</text>
+<text class="d-sub" x="501" y="223" text-anchor="middle">jump host</text>
+<path class="d-line" d="M624 210H565"/>
+<path class="d-head" d="M565 205l-9 5l9 5z"/>
+<text class="d-sub" x="590" y="201" text-anchor="middle">ProxyJump</text>
+<text class="d-sub" x="590" y="227" text-anchor="middle">SSH</text>
+<rect class="d-box" x="624" y="180" width="100" height="60" rx="6"/>
+<text class="d-title" x="674" y="206" text-anchor="middle">Laptop</text>
+<text class="d-sub" x="674" y="223" text-anchor="middle">or phone</text>
+</svg>

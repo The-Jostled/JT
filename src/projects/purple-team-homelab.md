@@ -3,20 +3,20 @@ title: "Purple-team homelab: pfSense, Wazuh, and a BadBlood Active Directory"
 date: 2026-02-01
 summary: "An isolated VirtualBox network with a firewall at the edge, a populated Windows domain to attack, a Kali box to attack it from, and a Wazuh SIEM watching the whole thing."
 tags: [homelab, wazuh, pfsense, active-directory, siem, virtualbox]
+# Nunjucks runs before Markdown on this page so the diagram include works
+templateEngineOverride: njk,md
 ---
 
 I built this lab to have somewhere I could run an attack and then go look at what it produced on the defensive side — the same event, from both chairs. Every HTB box teaches the offense; the lab is where I learned what that offense looks like in a SIEM.
 
 ## Topology
 
-```
-Internet ── pfSense (WAN: NAT)
-               │ LAN: internal network, DHCP from pfSense
-     ┌─────────┼──────────────┬───────────────┐
-  Kali       Wazuh SIEM    Windows Server   Metasploitable
- (attacker)  (Ubuntu)      DC + BadBlood    (legacy target)
-                              └─ Wazuh agent ─▶ Wazuh
-```
+<figure class="diagram">
+<div class="d-scroll">
+{% include "diagrams/homelab.svg.njk" %}
+</div>
+<figcaption>Hover or focus <strong>Kali</strong> to trace its attack paths, or <strong>Wazuh SIEM</strong> to trace log forwarding.</figcaption>
+</figure>
 
 - **Hypervisor:** VirtualBox
 - **Edge:** pfSense, with the lab on a VirtualBox *internal* network so nothing I run can touch my real home network

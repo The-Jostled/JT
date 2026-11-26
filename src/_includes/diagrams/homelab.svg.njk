@@ -1,0 +1,48 @@
+<svg class="d-svg d-homelab" viewBox="0 0 740 336" role="group" aria-labelledby="homelab-title homelab-desc">
+<title id="homelab-title">Homelab topology</title>
+<desc id="homelab-desc">pfSense sits between the internet and an isolated internal network. Kali, the Wazuh SIEM, a Windows Server domain controller and Metasploitable are on that network. Kali attacks the domain controller and Metasploitable; a Wazuh agent on the domain controller forwards logs to Wazuh.</desc>
+<rect class="d-box d-ext" x="310" y="6" width="120" height="32" rx="6"/>
+<text class="d-title" x="370" y="27" text-anchor="middle">Internet</text>
+<path class="d-wire" d="M370 38V62"/>
+<rect class="d-box" x="282" y="62" width="176" height="50" rx="6"/>
+<text class="d-title" x="370" y="83" text-anchor="middle">pfSense</text>
+<text class="d-sub" x="370" y="100" text-anchor="middle">edge firewall · NAT · DHCP</text>
+<path class="d-wire" d="M370 112V150M86 150H654M86 150V178M256 150V178M484 150V178M654 150V178"/>
+<text class="d-sub" x="380" y="138">internal network (isolated)</text>
+<g class="d-node d-node-kali" tabindex="0" role="img" aria-label="Kali, the attacker. Attacks the Windows Server domain controller and Metasploitable.">
+<rect class="d-box" x="16" y="178" width="140" height="58" rx="6"/>
+<text class="d-title" x="86" y="203" text-anchor="middle">Kali</text>
+<text class="d-sub" x="86" y="221" text-anchor="middle">attacker</text>
+</g>
+<g class="d-node d-node-wazuh" tabindex="0" role="img" aria-label="Wazuh SIEM on Ubuntu Server. Receives logs from the Wazuh agent on the domain controller.">
+<rect class="d-box" x="186" y="178" width="140" height="58" rx="6"/>
+<text class="d-title" x="256" y="203" text-anchor="middle">Wazuh SIEM</text>
+<text class="d-sub" x="256" y="221" text-anchor="middle">Ubuntu Server</text>
+</g>
+<g class="d-node" tabindex="0" role="img" aria-label="Windows Server domain controller, populated with BadBlood. Runs the Wazuh agent.">
+<rect class="d-box" x="414" y="178" width="140" height="58" rx="6"/>
+<text class="d-title" x="484" y="203" text-anchor="middle">Windows Server DC</text>
+<text class="d-sub" x="484" y="221" text-anchor="middle">AD + BadBlood</text>
+</g>
+<g class="d-node" tabindex="0" role="img" aria-label="Metasploitable, the legacy target.">
+<rect class="d-box" x="584" y="178" width="140" height="58" rx="6"/>
+<text class="d-title" x="654" y="203" text-anchor="middle">Metasploitable</text>
+<text class="d-sub" x="654" y="221" text-anchor="middle">legacy target</text>
+</g>
+<g class="d-edge d-edge-attack">
+<path class="d-line" d="M106 236V282H464V245"/>
+<path class="d-head" d="M459 246l5 -9l5 9z"/>
+<text class="d-sub" x="285" y="276" text-anchor="middle">attacks</text>
+</g>
+<g class="d-edge d-edge-attack">
+<path class="d-line" d="M66 236V316H654V245"/>
+<path class="d-head" d="M649 246l5 -9l5 9z"/>
+<text class="d-sub" x="360" y="310" text-anchor="middle">attacks</text>
+</g>
+<g class="d-edge d-edge-logs">
+<path class="d-line" d="M414 207H335"/>
+<path class="d-head" d="M336 202l-9 5l9 5z"/>
+<text class="d-sub" x="370" y="198" text-anchor="middle">Wazuh agent</text>
+<text class="d-sub" x="370" y="224" text-anchor="middle">logs</text>
+</g>
+</svg>
