@@ -180,4 +180,41 @@
     }, { threshold: 0.4 });
     Array.prototype.forEach.call(list.children, function (li) { itemIO.observe(li); });
   })();
+
+  /* ---------- Home tagline: types once on load, then the cursor goes away ----------
+     The only typing effect on the site. Screen readers get the full sentence from
+     the start; the untyped remainder is laid out invisibly so nothing reflows. */
+  (function tagline() {
+    var p = document.querySelector("[data-typed]");
+    if (!p || reducedMotion) return;
+
+    var text = p.textContent;
+    var MS_PER_CHAR = 40;
+    function span(cls, hidden) {
+      var s = document.createElement("span");
+      s.className = cls;
+      if (hidden) s.setAttribute("aria-hidden", "true");
+      return s;
+    }
+    var full = span("sr-only");
+    var typed = span("type-done", true);
+    var cursor = span("type-cursor", true);
+    var rest = span("type-rest", true);
+    full.textContent = text;
+    rest.textContent = text;
+    p.textContent = "";
+    p.appendChild(full); p.appendChild(typed); p.appendChild(cursor); p.appendChild(rest);
+
+    var start = performance.now();
+    var timer = setInterval(function () {
+      // Position comes from elapsed time, so a throttled background tab catches up
+      var i = Math.min(text.length, Math.floor((performance.now() - start) / MS_PER_CHAR));
+      typed.textContent = text.slice(0, i);
+      rest.textContent = text.slice(i);
+      if (i >= text.length) {
+        clearInterval(timer);
+        p.textContent = text; // back to plain text, cursor gone
+      }
+    }, MS_PER_CHAR);
+  })();
 })();
