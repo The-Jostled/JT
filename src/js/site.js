@@ -217,4 +217,24 @@
       }
     }, MS_PER_CHAR);
   })();
+
+  /* ---------- Run-once figures (e.g. the Helix gauge) ----------
+     CSS shows the final state by default. `is-armed` rewinds to the start,
+     `is-run` plays the animation a single time when the figure scrolls into view. */
+  (function runOnce() {
+    var figs = document.querySelectorAll("[data-run-once]");
+    if (!figs.length || reducedMotion || !hasIO) return;
+
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        e.target.classList.add("is-run");
+        io.unobserve(e.target);
+      });
+    }, { threshold: 0.6 });
+    Array.prototype.forEach.call(figs, function (f) {
+      f.classList.add("is-armed");
+      io.observe(f);
+    });
+  })();
 })();

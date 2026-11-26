@@ -185,6 +185,51 @@ python3 -m venv /dev/shm/venv
 
 Browsing namespace 2 on the OPC-UA server gave the node map: `TemperatureRaw` (i=3), `Temperature` (i=4), `Pressure` (i=5), `CalibrationOffset` (i=6), `TripActive` (i=10), `Mode` (i=12), `TestOverride` (i=13), `ResetTrip` (i=14).
 
+<figure class="diagram hx" data-run-once>
+<svg class="hx-svg" viewBox="0 0 360 118" role="img" aria-labelledby="hx-title hx-desc">
+<title id="hx-title">Opening the maintenance window</title>
+<desc id="hx-desc">Reactor temperature rises from about 284 °C, overshoots and trips the safety controller once, is reset, then climbs to 296 °C, where the maintenance window opens.</desc>
+<style>
+.hx-svg{display:block;width:100%;max-width:26rem;height:auto;font-family:var(--font-sans)}
+.hx-svg text{fill:var(--fg-muted);font-size:11px}
+.hx-track{fill:var(--bg-elev);stroke:var(--fg-muted)}
+.hx-fill{fill:var(--accent);transform-box:fill-box;transform-origin:left;transform:scaleX(.8)}
+.hx-tick{stroke:var(--fg);stroke-width:1.5}
+.hx-lamp{fill:none;stroke:var(--fg-muted);stroke-width:1.5}
+.hx-lamp-on{fill:var(--attack);opacity:0}
+.hx-svg .hx-state{fill:var(--fg);font-size:13px;font-weight:700;font-family:var(--font-mono)}
+.hx-closed{opacity:0}
+@media (prefers-reduced-motion:no-preference){
+.is-armed .hx-fill{transform:scaleX(.2)}
+.is-armed .hx-closed{opacity:1}
+.is-armed .hx-open{opacity:0}
+.is-run .hx-fill{animation:hx-fill 8s ease-in-out both}
+.is-run .hx-lamp-on{animation:hx-trip 8s linear both}
+.is-run .hx-closed{animation:hx-closed 8s linear both}
+.is-run .hx-open{animation:hx-open 8s linear both}
+}
+@keyframes hx-fill{0%{transform:scaleX(.2)}30%,38%{transform:scaleX(.96)}46%,52%{transform:scaleX(.2)}88%,100%{transform:scaleX(.8)}}
+@keyframes hx-trip{0%,29%{opacity:0}31%,40%{opacity:1}46%,100%{opacity:0}}
+@keyframes hx-closed{0%,89%{opacity:1}92%,100%{opacity:0}}
+@keyframes hx-open{0%,89%{opacity:0}92%,100%{opacity:1}}
+</style>
+<text x="10" y="14">Reactor temperature (°C)</text>
+<rect class="hx-track" x="10" y="24" width="340" height="14"/>
+<rect class="hx-fill" x="10" y="24" width="340" height="14"/>
+<path class="hx-tick" d="M78 20v22M265 20v22M333 20v22"/>
+<text x="78" y="56" text-anchor="middle">284</text>
+<text x="265" y="56" text-anchor="middle">295 window</text>
+<text x="333" y="56" text-anchor="middle">trip</text>
+<circle class="hx-lamp" cx="18" cy="94" r="7"/>
+<circle class="hx-lamp-on" cx="18" cy="94" r="7"/>
+<text x="32" y="98">safety trip</text>
+<text class="hx-state" x="200" y="99">WINDOW:</text>
+<text class="hx-state hx-closed" x="262" y="99">CLOSED</text>
+<text class="hx-state hx-open" x="262" y="99">OPEN</text>
+</svg>
+<figcaption>The idea, not the script: push the temperature up, recover from one safety trip, then hold at 296 °C until the window opens.</figcaption>
+</figure>
+
 The working script follows the manual's sequence, keeps re-applying the offset (a cleanup service resets every value every five minutes), resets the trip if the safety controller fires, and runs the maintenance console the moment the HMI reports the window open:
 
 ```python
