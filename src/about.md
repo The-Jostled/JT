@@ -50,8 +50,8 @@ Nmap, ffuf, Burp Suite, Impacket, BloodHound/bloodyAD, NetExec, Metasploit, Hash
 
 ## Contact
 
-- GitHub: [github.com/cyfhr](https://github.com/cyfhr)
+- GitHub: [github.com/The-Jostled](https://github.com/The-Jostled)
 - LinkedIn: [linkedin.com/in/Joshua-Thomas-841385369](https://www.linkedin.com/in/Joshua-Thomas-841385369)
-- Hack The Box: [cyfhr](https://app.hackthebox.com/profile/cyfhr)
+- Hack The Box: [cyfhr](https://app.hackthebox.com/users/2399884)
 
 </div>

@@ -1,4 +1,4 @@
-# cyfhr.github.io
+# JT — portfolio site
 
 Portfolio and writeups for Joshua Thomas (cyfhr). Static site built with [Eleventy](https://www.11ty.dev/), deployed to GitHub Pages on every push to `main`.
 

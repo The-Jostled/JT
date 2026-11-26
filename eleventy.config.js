@@ -137,7 +137,7 @@ export default function (eleventyConfig) {
     dir: { input: "src", output: "_site", includes: "_includes", data: "_data" },
     markdownTemplateEngine: false,
     htmlTemplateEngine: "njk",
-    // Set via env for project-page deployments; empty for user site (cyfhr.github.io)
+    // Set via env for project-page deployments; "/" for a user site (<name>.github.io)
     pathPrefix: process.env.PATH_PREFIX || "/",
   };
 }
