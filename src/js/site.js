@@ -62,13 +62,44 @@
         var i = Number(a.getAttribute("data-step"));
         a.setAttribute("role", "tab");
         a.setAttribute("aria-controls", "ap-step-" + (i + 1));
-        a.addEventListener("click", function (e) { e.preventDefault(); select(i); });
+        a.addEventListener("click", function (e) { e.preventDefault(); select(i); reveal(i); });
         a.addEventListener("keydown", function (e) { arrowKeys(e, i, count, select); });
       });
     });
-    steps.forEach(function (li) {
+
+    // On a phone the panel can sit below the fold, so a tap on a node would
+    // appear to do nothing. Bring the panel into view when it is not.
+    function reveal(i) {
+      var r = steps[i].getBoundingClientRect();
+      if (r.top < 0 || r.bottom > window.innerHeight) steps[i].scrollIntoView({ block: "nearest" });
+    }
+
+    // Previous / Next buttons in each panel: touch screens have no arrow keys
+    function navButton(text, target) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "chip";
+      b.textContent = text;
+      b.disabled = target < 0 || target >= count;
+      b.addEventListener("click", function () {
+        select(target);
+        reveal(target);
+        // Keep focus on the same control in the new panel so it can be pressed again
+        var again = all(steps[target], ".ap-nav button").filter(function (x) {
+          return x.textContent === text && !x.disabled;
+        })[0] || steps[target].querySelector(".ap-nav button:not([disabled])");
+        if (again) again.focus({ preventScroll: true });
+      });
+      return b;
+    }
+    steps.forEach(function (li, i) {
       li.setAttribute("role", "tabpanel");
       li.setAttribute("aria-label", li.getAttribute("data-label"));
+      var navBox = document.createElement("span");
+      navBox.className = "ap-nav";
+      navBox.appendChild(navButton("← Previous", i - 1));
+      navBox.appendChild(navButton("Next →", i + 1));
+      li.querySelector(".ap-step-foot").appendChild(navBox);
     });
     select(0);
 

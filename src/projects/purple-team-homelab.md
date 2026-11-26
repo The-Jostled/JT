@@ -15,7 +15,8 @@ I built this lab to have somewhere I could run an attack and then go look at wha
 <div class="d-scroll">
 {% include "diagrams/homelab.svg.njk" %}
 </div>
-<figcaption>Hover or focus <strong>Kali</strong> to trace its attack paths, or <strong>Wazuh SIEM</strong> to trace log forwarding.</figcaption>
+<p class="swipe-hint" aria-hidden="true">Swipe sideways to see the whole diagram →</p>
+<figcaption>Hover, tap or focus <strong>Kali</strong> to trace its attack paths, or <strong>Wazuh SIEM</strong> to trace log forwarding.</figcaption>
 </figure>
 
 - **Hypervisor:** VirtualBox

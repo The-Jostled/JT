@@ -26,6 +26,7 @@ So I moved the access path to a small VPS I already had. WireGuard to the VPS al
 <div class="d-scroll" tabindex="0" role="group" aria-label="Remote access diagram">
 {% include "diagrams/dorm-access.svg.njk" %}
 </div>
+<p class="swipe-hint" aria-hidden="true">Swipe sideways to see the whole diagram →</p>
 <figcaption>What ended up working: a reverse SSH tunnel out to a VPS, and ProxyJump back in.</figcaption>
 </figure>
 

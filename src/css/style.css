@@ -389,3 +389,59 @@ h1 { font-size: 2.2rem; font-weight: 720; letter-spacing: -0.02em; }
 .card.is-match a { border-color: var(--accent); background: var(--bg-elev); }
 .tech.is-dim { opacity: 0.35; }
 .tech.is-lit { border-color: var(--accent); box-shadow: inset 0 0 0 2px var(--accent); }
+
+/* =====================================================================
+   Phones and touch
+   ===================================================================== */
+
+/* Step panel: long commands scroll inside their own box instead of widening the page */
+.ap-facts { grid-template-columns: repeat(auto-fit, minmax(min(13rem, 100%), 1fr)); }
+.ap-facts > div { min-width: 0; }
+.ap-step-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.6rem 1rem; }
+.ap-nav { display: flex; gap: 0.4rem; }
+.chip:disabled { opacity: 0.45; cursor: default; border-color: var(--line); }
+
+/* Long inline paths and attribute names break instead of pushing the page wider */
+:not(pre) > code { overflow-wrap: anywhere; }
+
+/* Shown only where the matrix or a diagram is wider than the screen */
+.swipe-hint { display: none; margin: 0.3rem 0 0; font-size: 0.8rem; color: var(--fg-muted); }
+@media (max-width: 62rem) { .matrix-scroll + .swipe-hint { display: block; } }
+@media (max-width: 42rem) { .d-scroll + .swipe-hint { display: block; } }
+
+/* The hover lift would stick after a tap, so keep it to devices that really hover */
+@media (hover: none) {
+  .card a:hover { transform: none; box-shadow: none; }
+}
+
+@media (max-width: 40rem) {
+  main { padding-block: 2rem 3rem; }
+  h1 { font-size: 1.8rem; }
+  .hero { margin-top: -2rem; }
+  .section-head { flex-wrap: wrap; }
+  .section-head h2 { font-size: 1.3rem; }
+  .site-header .wrap { gap: 0.3rem 1.5rem; padding-block: 0.7rem 0.4rem; }
+  .featured { padding: 1rem 1rem 1.1rem; }
+  .featured h3 { font-size: 1.15rem; }
+  .ap-step { padding: 0.8rem 0.9rem 0.9rem; }
+  .ap-meter span { width: 0.9rem; }
+  /* Matrix scrolls sideways here, so the columns can afford readable labels */
+  .matrix { grid-auto-columns: minmax(7.6rem, 1fr); }
+  .tactic h3 { font-size: 0.72rem; }
+  /* Reading bar: narrower segments leave room for the step name */
+  .ap-progress .wrap { gap: 0.6rem; }
+  .ap-progress-segs { gap: 3px; }
+  .ap-progress-segs a { width: 0.95rem; }
+}
+
+/* Comfortable tap targets on touch screens (about 40px tall) */
+@media (pointer: coarse) {
+  .site-header nav a { padding-block: 0.55rem; }
+  .chip { padding: 0.5rem 0.9rem; font-size: 0.9rem; }
+  .chairs-tabs .chip { padding: 0.5rem 0.9rem; }
+  .tech { padding: 0.6rem 0.5rem; font-size: 0.78rem; }
+  .btn { padding: 0.65rem 1.05rem; }
+  .cve-list a, .ap-step-foot a, .chair-source a, .section-head a { display: inline-block; padding-block: 0.4rem; }
+  .ap-progress-segs a { padding: 0.85rem 0; }
+  .site-footer .links a { padding-block: 0.5rem; display: inline-block; }
+}
