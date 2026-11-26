@@ -7,6 +7,7 @@ os: Windows
 category: Defense
 summary: "One security.evtx from a domain controller, one anomalous Event ID 4768, and a compromised account identified from the source IP. Plus the tooling fight that came before any of it."
 tags: [dfir, kerberos, as-rep-roasting, event-logs, evtx, blue-team]
+attack: [T1558.004, T1078.002, T1087.002]
 attackPath:
   - label: "Convert the EVTX to XML"
     anchor: "getting-a-working-toolchain-first"

@@ -7,6 +7,7 @@ os: Windows
 category: Offense
 summary: "An assume-breach Active Directory box: an attribute-level ACL that BloodHound doesn't show, RBCD into a read-only domain controller, and a Password Replication Policy abused to forge a ticket the primary DC accepts."
 tags: [active-directory, rodc, rbcd, golden-ticket, bloodyad, impacket, rubeus, chisel, kerberos]
+attack: [T1078, T1087.002, T1069.002, T1037.003, T1098, T1548, T1090, T1550.003, T1003.004, T1558.001, T1003.006]
 attackPath:
   - label: "Logon script via scriptPath write"
     anchor: "foothold-%E2%80%94-logon-script-abuse"

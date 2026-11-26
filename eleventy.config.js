@@ -5,6 +5,12 @@ import markdownItAnchor from "markdown-it-anchor";
 export default function (eleventyConfig) {
   eleventyConfig.addPlugin(syntaxHighlight);
 
+  // `attack` is both a global data file (_data/attack.json, the tactic matrix)
+  // and a per-writeup front matter list of technique IDs. With deep merge on,
+  // Eleventy would blend the list into the matrix object; off, front matter
+  // simply replaces it on that page.
+  eleventyConfig.setDataDeepMerge(false);
+
   const md = markdownIt({ html: true, linkify: true, typographer: true }).use(
     markdownItAnchor,
     { permalink: false, tabIndex: false }
@@ -39,6 +45,23 @@ export default function (eleventyConfig) {
   eleventyConfig.addGlobalData("year", () => new Date().getFullYear());
   eleventyConfig.addFilter("head", (arr, n) => (arr || []).slice(0, n));
   eleventyConfig.addFilter("isoDate", (d) => new Date(d).toISOString().slice(0, 10));
+
+  // How many items in a collection list an ATT&CK technique ID in front matter
+  eleventyConfig.addFilter("attackCount", (items, id) =>
+    (items || []).filter((i) => (i.data.attack || []).includes(id)).length
+  );
+
+  // Distinct front matter values for a key, for building filter chips.
+  // Difficulty sorts by rank; everything else alphabetically.
+  eleventyConfig.addFilter("uniqueValues", (items, key) => {
+    const rank = ["Very Easy", "Easy", "Medium", "Hard", "Insane"];
+    const values = [...new Set((items || []).map((i) => i.data[key]).filter(Boolean))];
+    return values.sort((a, b) =>
+      key === "difficulty"
+        ? rank.indexOf(a) - rank.indexOf(b)
+        : String(a).localeCompare(String(b))
+    );
+  });
 
   // Greedy word-wrap for SVG labels (SVG text does not wrap on its own)
   eleventyConfig.addFilter("wrapLabel", (text, max = 20) => {

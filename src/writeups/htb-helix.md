@@ -7,6 +7,7 @@ os: Linux
 category: Offense
 summary: "A hidden Apache NiFi instance gives code execution; root requires reading the plant's own operating manual and driving a simulated PLC over OPC-UA into a privileged maintenance state."
 tags: [nifi, h2, opc-ua, ics, jdbc-rce, pdf-cracking, sudo]
+attack: [T1595.003, T1190, T1059.004, T1552.004, T1110.002, T1548.003]
 attackPath:
   - label: "Vhost fuzzing finds open NiFi"
     anchor: "reconnaissance"

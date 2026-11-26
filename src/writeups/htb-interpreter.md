@@ -7,6 +7,7 @@ os: Linux
 category: Offense
 summary: "Pre-auth RCE in a healthcare integration engine, a PBKDF2 hash that only cracks with the right iteration count, and a root-owned Flask service that evaluates patient names as Python."
 tags: [mirth-connect, cve-2023-43208, xstream, pbkdf2, hashcat, eval-injection, flask]
+attack: [T1190, T1059.004, T1552.001, T1110.002, T1068, T1548.001]
 attackPath:
   - label: "Fingerprint Mirth Connect 4.4.0"
     anchor: "reconnaissance"

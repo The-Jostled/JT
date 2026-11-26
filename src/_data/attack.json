@@ -1,0 +1,52 @@
+{
+  "note": "MITRE ATT&CK Enterprise tactics, with only the techniques referenced by writeups on this site. Each technique is listed once, under its primary tactic.",
+  "tactics": [
+    { "id": "TA0043", "name": "Reconnaissance", "techniques": [
+      { "id": "T1595.003", "name": "Active Scanning: Wordlist Scanning" }
+    ] },
+    { "id": "TA0042", "name": "Resource Development", "techniques": [] },
+    { "id": "TA0001", "name": "Initial Access", "techniques": [
+      { "id": "T1190", "name": "Exploit Public-Facing Application" },
+      { "id": "T1078", "name": "Valid Accounts" },
+      { "id": "T1078.002", "name": "Valid Accounts: Domain Accounts" },
+      { "id": "T1078.003", "name": "Valid Accounts: Local Accounts" }
+    ] },
+    { "id": "TA0002", "name": "Execution", "techniques": [
+      { "id": "T1059.004", "name": "Command and Scripting Interpreter: Unix Shell" }
+    ] },
+    { "id": "TA0003", "name": "Persistence", "techniques": [
+      { "id": "T1037.003", "name": "Boot or Logon Initialization Scripts: Network Logon Script" },
+      { "id": "T1098", "name": "Account Manipulation" }
+    ] },
+    { "id": "TA0004", "name": "Privilege Escalation", "techniques": [
+      { "id": "T1068", "name": "Exploitation for Privilege Escalation" },
+      { "id": "T1548", "name": "Abuse Elevation Control Mechanism" },
+      { "id": "T1548.001", "name": "Abuse Elevation Control Mechanism: Setuid and Setgid" },
+      { "id": "T1548.003", "name": "Abuse Elevation Control Mechanism: Sudo and Sudo Caching" }
+    ] },
+    { "id": "TA0005", "name": "Defense Evasion", "techniques": [] },
+    { "id": "TA0006", "name": "Credential Access", "techniques": [
+      { "id": "T1003.004", "name": "OS Credential Dumping: LSA Secrets" },
+      { "id": "T1003.006", "name": "OS Credential Dumping: DCSync" },
+      { "id": "T1110.002", "name": "Brute Force: Password Cracking" },
+      { "id": "T1552.001", "name": "Unsecured Credentials: Credentials In Files" },
+      { "id": "T1552.004", "name": "Unsecured Credentials: Private Keys" },
+      { "id": "T1558.001", "name": "Steal or Forge Kerberos Tickets: Golden Ticket" },
+      { "id": "T1558.004", "name": "Steal or Forge Kerberos Tickets: AS-REP Roasting" }
+    ] },
+    { "id": "TA0007", "name": "Discovery", "techniques": [
+      { "id": "T1046", "name": "Network Service Discovery" },
+      { "id": "T1069.002", "name": "Permission Groups Discovery: Domain Groups" },
+      { "id": "T1087.002", "name": "Account Discovery: Domain Account" }
+    ] },
+    { "id": "TA0008", "name": "Lateral Movement", "techniques": [
+      { "id": "T1550.003", "name": "Use Alternate Authentication Material: Pass the Ticket" }
+    ] },
+    { "id": "TA0009", "name": "Collection", "techniques": [] },
+    { "id": "TA0011", "name": "Command and Control", "techniques": [
+      { "id": "T1090", "name": "Proxy" }
+    ] },
+    { "id": "TA0010", "name": "Exfiltration", "techniques": [] },
+    { "id": "TA0040", "name": "Impact", "techniques": [] }
+  ]
+}

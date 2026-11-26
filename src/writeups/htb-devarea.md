@@ -7,6 +7,7 @@ os: Linux
 category: Offense
 summary: "Three CVEs chained end to end: file read through Apache CXF, authenticated RCE in Hoverfly, and a TOCTOU in PackageKit that installs a package as root without asking polkit."
 tags: [xxe, apache-cxf, hoverfly, packagekit, cve-2026-41651, linpeas, privesc]
+attack: [T1046, T1190, T1552.001, T1059.004, T1068, T1548.001]
 attackPath:
   - label: "Anonymous FTP leaks the service JAR"
     anchor: "reconnaissance"

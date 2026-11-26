@@ -7,6 +7,7 @@ os: Linux
 category: Offense
 summary: "An unauthenticated backup endpoint hands over its own AES key in a response header; root comes from a race between snap-confine and systemd-tmpfiles."
 tags: [nginx-ui, cve-2026-27944, aes, bcrypt, hashcat, snapd, cve-2026-3888, race-condition]
+attack: [T1595.003, T1190, T1110.002, T1078.003, T1068]
 attackPath:
   - label: "Vhost fuzzing finds Nginx UI"
     anchor: "enumeration"

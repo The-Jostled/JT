@@ -6,12 +6,48 @@ section: false
 <h1>Writeups</h1>
 <p class="lede muted" style="max-width: var(--measure)">Walkthroughs of retired Hack The Box machines and Sherlocks, plus the occasional TryHackMe room. Each one includes the dead ends and mistakes, not just the working path — that's where most of the learning was. Only retired targets are published, in line with platform rules.</p>
 
-<h2 class="group-title">Attack — machines</h2>
-<ul class="cards">
-  {% for item in collections.writeups %}{% if item.data.category == "Offense" %}{% include "list-item.njk" %}{% endif %}{% endfor %}
-</ul>
+<section class="attack-matrix" aria-labelledby="matrix-title">
+  <h2 id="matrix-title" class="group-title">MITRE ATT&amp;CK coverage</h2>
+  <p class="matrix-intro">Techniques used or investigated across these writeups. The number in each cell is how many writeups reference it; darker shading means more.</p>
+  <div class="matrix-scroll">
+    <div class="matrix" data-attack-matrix>
+      {%- for tactic in attack.tactics %}{% if tactic.techniques.length %}
+      <div class="tactic" role="group" aria-labelledby="tactic-{{ tactic.id }}">
+        <h3 id="tactic-{{ tactic.id }}">{{ tactic.name }}</h3>
+        <ul>
+          {%- for t in tactic.techniques %}{% set c = collections.writeups | attackCount(t.id) %}{% if c %}
+          <li><button type="button" class="tech" data-technique="{{ t.id }}" data-name="{{ t.name }}" data-count="{{ c }}" data-level="{{ 4 if c > 4 else c }}" aria-pressed="false" aria-label="{{ t.id }}, {{ t.name }}, {{ c }} writeup{{ 's' if c != 1 }}" title="{{ t.id }} — {{ t.name }} ({{ c }} writeup{{ 's' if c != 1 }})"><span class="tech-id">{{ t.id }}</span><span class="tech-n">{{ c }}</span></button></li>
+          {%- endif %}{% endfor %}
+        </ul>
+      </div>
+      {%- endif %}{% endfor %}
+    </div>
+  </div>
+  <p class="matrix-readout" data-matrix-readout>Hover or focus a cell for the technique name.</p>
+  <p class="matrix-legend">
+    <span aria-hidden="true">Writeups per technique <span class="swatch" data-level="1">1</span><span class="swatch" data-level="2">2</span><span class="swatch" data-level="3">3</span><span class="swatch" data-level="4">4+</span></span>
+    <span>Not covered yet: {% set comma = joiner(", ") %}{% for tactic in attack.tactics %}{% if not tactic.techniques.length %}{{ comma() }}{{ tactic.name }}{% endif %}{% endfor %}.</span>
+  </p>
+</section>
 
-<h2 class="group-title">Defend — forensics &amp; investigation</h2>
-<ul class="cards">
-  {% for item in collections.writeups %}{% if item.data.category == "Defense" %}{% include "list-item.njk" %}{% endif %}{% endfor %}
-</ul>
+<div class="filter-bar" data-filter-bar hidden>
+  <p class="filter-status">
+    <span data-filter-status role="status">Showing all {{ collections.writeups | length }} writeups</span>
+    <button type="button" class="chip chip-clear" data-filter-clear hidden>Clear filters</button>
+  </p>
+</div>
+
+<section data-filter-group>
+  <h2 class="group-title">Attack — machines</h2>
+  <ul class="cards">
+    {% for item in collections.writeups %}{% if item.data.category == "Offense" %}{% include "list-item.njk" %}{% endif %}{% endfor %}
+  </ul>
+</section>
+
+<section data-filter-group>
+  <h2 class="group-title">Defend — forensics &amp; investigation</h2>
+  <ul class="cards">
+    {% for item in collections.writeups %}{% if item.data.category == "Defense" %}{% include "list-item.njk" %}{% endif %}{% endfor %}
+  </ul>
+</section>
+<p class="filter-empty" data-filter-empty hidden>No writeups match these filters.</p>
