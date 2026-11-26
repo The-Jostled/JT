@@ -1,0 +1,21 @@
+---
+layout: base.njk
+---
+<article class="post">
+  <header class="post-header">
+    {% if section %}<p class="eyebrow"><a href="{{ ('/' + section + '/') | url }}">{{ section | capitalize }}</a></p>{% endif %}
+    <h1>{{ title }}</h1>
+    {% if summary %}<p class="lede">{{ summary }}</p>{% endif %}
+    <dl class="meta">
+      {% if platform %}<div><dt>Platform</dt><dd>{{ platform }}</dd></div>{% endif %}
+      {% if difficulty %}<div><dt>Difficulty</dt><dd>{{ difficulty }}</dd></div>{% endif %}
+      {% if os %}<div><dt>OS</dt><dd>{{ os }}</dd></div>{% endif %}
+      {% if category %}<div><dt>Category</dt><dd>{{ category }}</dd></div>{% endif %}
+      <div><dt>Date</dt><dd><time datetime="{{ date | isoDate }}">{{ date | readableDate }}</time></dd></div>
+    </dl>
+    {% if tags %}<ul class="tags">{% for t in tags %}<li>{{ t }}</li>{% endfor %}</ul>{% endif %}
+  </header>
+  <div class="prose">
+    {{ content | safe }}
+  </div>
+</article>

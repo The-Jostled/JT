@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% if title and title != site.title %}{{ title }} · {{ site.title }}{% else %}{{ site.title }} — {{ site.handle }}{% endif %}</title>
+  <meta name="description" content="{{ summary or description or site.description }}">
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" href="{{ '/favicon.svg' | url }}" type="image/svg+xml">
+  <link rel="stylesheet" href="{{ '/css/style.css' | url }}">
+  <link rel="stylesheet" href="{{ '/css/prism.css' | url }}">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="{{ '/' | url }}">{{ site.title }} <span class="handle">/ {{ site.handle }}</span></a>
+      <nav aria-label="Primary">
+        <a href="{{ '/writeups/' | url }}" {% if page.url.startsWith('/writeups/') %}aria-current="page"{% endif %}>Writeups</a>
+        <a href="{{ '/projects/' | url }}" {% if page.url.startsWith('/projects/') %}aria-current="page"{% endif %}>Projects</a>
+        <a href="{{ '/blog/' | url }}" {% if page.url.startsWith('/blog/') %}aria-current="page"{% endif %}>Blog</a>
+        <a href="{{ '/about/' | url }}" {% if page.url == '/about/' %}aria-current="page"{% endif %}>About</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="wrap">
+    {{ content | safe }}
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <span>© {{ year }} Joshua Thomas</span>
+      <span class="links">
+        <a href="{{ site.github }}">GitHub</a>
+        <a href="{{ site.linkedin }}">LinkedIn</a>
+        <a href="{{ site.htb }}">Hack The Box</a>
+      </span>
+    </div>
+  </footer>
+</body>
+</html>

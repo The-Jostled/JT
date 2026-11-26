@@ -1,0 +1,17 @@
+{
+  "name": "cyfhr-site",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Portfolio and writeups — Joshua Thomas (cyfhr)",
+  "scripts": {
+    "build": "eleventy",
+    "serve": "eleventy --serve",
+    "clean": "rm -rf _site"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "^3.0.0",
+    "@11ty/eleventy-plugin-syntaxhighlight": "^5.0.0",
+    "markdown-it-anchor": "^9.0.0"
+  }
+}

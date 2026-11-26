@@ -1,0 +1,42 @@
+---
+layout: base.njk
+title: Joshua Thomas
+---
+<section class="hero">
+  <h1>Joshua Thomas</h1>
+  <p class="lede">Cybersecurity student at NHTI with a defensive certification already in hand and an offensive one in progress. I document what I break, what I detect, and what I learned doing it.</p>
+  <div class="cta">
+    <a class="btn primary" href="{{ '/writeups/' | url }}">Read the writeups</a>
+    <a class="btn" href="{{ '/about/' | url }}">About me</a>
+  </div>
+  <ul class="creds" aria-label="Credentials">
+    <li><strong>HTB CDSA</strong> — Certified Defensive Security Analyst</li>
+    <li><strong>HTB CPTS</strong> — in progress</li>
+    <li><strong>CompTIA Security+</strong> — in progress</li>
+    <li><strong>A.S. Networking &amp; Cybersecurity Operations</strong> — NHTI, in progress</li>
+  </ul>
+</section>
+
+<div class="section-head">
+  <h2>Recent writeups</h2>
+  <a href="{{ '/writeups/' | url }}">All writeups →</a>
+</div>
+<ul class="cards">
+  {% for item in collections.writeups | head(4) %}{% include "list-item.njk" %}{% endfor %}
+</ul>
+
+<div class="section-head">
+  <h2>Projects</h2>
+  <a href="{{ '/projects/' | url }}">All projects →</a>
+</div>
+<ul class="cards">
+  {% for item in collections.projects | head(3) %}{% include "list-item.njk" %}{% endfor %}
+</ul>
+
+<div class="section-head">
+  <h2>Blog</h2>
+  <a href="{{ '/blog/' | url }}">All posts →</a>
+</div>
+<ul class="cards">
+  {% for item in collections.blog | head(3) %}{% include "list-item.njk" %}{% endfor %}
+</ul>

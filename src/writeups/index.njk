@@ -1,0 +1,17 @@
+---
+layout: base.njk
+title: Writeups
+section: false
+---
+<h1>Writeups</h1>
+<p class="lede muted" style="max-width: var(--measure)">Walkthroughs of retired Hack The Box machines and Sherlocks, plus the occasional TryHackMe room. Each one includes the dead ends and mistakes, not just the working path — that's where most of the learning was. Only retired targets are published, in line with platform rules.</p>
+
+<h2 class="group-title">Attack — machines</h2>
+<ul class="cards">
+  {% for item in collections.writeups %}{% if item.data.category == "Offense" %}{% include "list-item.njk" %}{% endif %}{% endfor %}
+</ul>
+
+<h2 class="group-title">Defend — forensics &amp; investigation</h2>
+<ul class="cards">
+  {% for item in collections.writeups %}{% if item.data.category == "Defense" %}{% include "list-item.njk" %}{% endif %}{% endfor %}
+</ul>

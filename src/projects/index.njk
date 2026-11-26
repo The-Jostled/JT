@@ -1,0 +1,10 @@
+---
+layout: base.njk
+title: Projects
+section: false
+---
+<h1>Projects</h1>
+<p class="lede muted" style="max-width: var(--measure)">Things I've built and run outside of coursework — mostly infrastructure for practicing both sides of security.</p>
+<ul class="cards">
+  {% for item in collections.projects %}{% include "list-item.njk" %}{% endfor %}
+</ul>
