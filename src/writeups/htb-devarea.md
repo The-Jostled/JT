@@ -17,12 +17,27 @@ tools: [curl, LinPEAS, pkcon]
 attackPath:
   - label: "Anonymous FTP leaks the service JAR"
     anchor: "reconnaissance"
+    access: "None (anonymous)"
+    technique: "T1046"
+    detect: "FTP logs show an anonymous login from an outside address and a download of employee-service.jar."
   - label: "XXE file read in Apache CXF"
     anchor: "initial-access-%E2%80%94-cve-2022-46364"
+    access: "File read as the SOAP service"
+    technique: "T1190"
+    command: "<xop:Include href=\"file:///etc/systemd/system/hoverfly.service\"/>"
+    detect: "A SOAP request to /employeeservice whose body carries an xop:Include with a file:// href. Only logging that captures request bodies (a WAF, or CXF message logging) shows it; the access log alone does not."
   - label: "Hoverfly middleware RCE"
     anchor: "code-execution-%E2%80%94-cve-2025-54123"
+    access: "Shell as dev_ryan"
+    technique: "T1059.004"
+    command: "POST /api/v2/hoverfly/middleware  {\"binary\": \"/bin/bash\", ...}"
+    detect: "An API call that sets Hoverfly's middleware binary to /bin/bash, then the Hoverfly process spawning bash with an outbound connection."
   - label: "PackageKit race to root"
     anchor: "privilege-escalation-%E2%80%94-cve-2026-41651"
+    access: "root"
+    technique: "T1068"
+    command: "/tmp/cve-2026-41651 && /tmp/.suid_bash -p"
+    detect: "PackageKit installing a local package for an unprivileged session, then a new SUID binary appearing in /tmp. File-integrity monitoring or an auditd rule on setuid changes catches the second half."
 ---
 
 DevArea is a developer-services portal with a lot of surface: FTP, a SOAP endpoint, an API-simulation tool, and an internal proxy. The whole box is CVE chaining, which makes it a good exercise in reading advisories carefully rather than in novel technique — and the privilege escalation was a reminder that manual enumeration has blind spots.

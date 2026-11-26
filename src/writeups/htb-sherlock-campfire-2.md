@@ -12,12 +12,21 @@ tools: [evtx_dump, grep]
 attackPath:
   - label: "Convert the EVTX to XML"
     anchor: "getting-a-working-toolchain-first"
+    command: "evtx_dump /tmp/security.evtx > /tmp/security.xml"
+    finding: "A searchable XML copy of the domain controller's Security log."
   - label: "Filter Event ID 4768"
     anchor: "the-event-that-matters%3A-4768"
+    technique: "T1558.004"
+    command: "grep -E \"SystemTime|EventID|TargetUserName|Status|IpAddress\" /tmp/security.xml | grep -A 4 \"4768\""
+    finding: "One AS-REQ from a non-localhost address, for a dormant account, with status 0x0. The ticket was issued, so pre-authentication was disabled on that account."
   - label: "Trace the source IP to an account"
     anchor: "who-sent-it"
+    technique: "T1078.002"
+    command: "grep -B 5 -A 50 \"172.17.79.129\" /tmp/security.xml"
+    finding: "The account active on the source host, which is the attacker's foothold in the domain."
   - label: "Findings and containment"
     anchor: "findings"
+    finding: "The timestamp, targeted account, attacker account and source host, plus the containment steps to recommend."
 ---
 
 Forela's security team got an alert that an old, supposedly inactive admin account had requested a Kerberos ticket from the domain controller. The working theory was AS-REP roasting: if an account has Kerberos pre-authentication disabled, anyone on the network can request an encrypted ticket for it without knowing the password, take it offline, and crack it.

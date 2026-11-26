@@ -5,6 +5,7 @@ platform: Hack The Box
 difficulty: Hard
 os: Windows
 category: Offense
+featured: true
 summary: "An assume-breach Active Directory box: an attribute-level ACL that BloodHound doesn't show, RBCD into a read-only domain controller, and a Password Replication Policy abused to forge a ticket the primary DC accepts."
 tags: [active-directory, rodc, rbcd, golden-ticket, bloodyad, impacket, rubeus, chisel, kerberos]
 attack: [T1078, T1087.002, T1069.002, T1037.003, T1098, T1548, T1090, T1550.003, T1003.004, T1558.001, T1003.006]
@@ -13,16 +14,40 @@ tools: [NetExec, BloodHound, bloodyAD, smbclient, Evil-WinRM, Impacket, Chisel, 
 attackPath:
   - label: "Logon script via scriptPath write"
     anchor: "foothold-%E2%80%94-logon-script-abuse"
+    access: "Shell as l.wilson"
+    technique: "T1037.003"
+    command: "bloodyAD ... set object l.wilson scriptPath -v 'printerDetect.bat'"
+    detect: "With directory-service change auditing on, Event 5136 records the scriptPath change. File-share auditing (Event 5145) shows a non-admin account writing a .bat into SYSVOL."
   - label: "ForceChangePassword to WinRM"
     anchor: "lateral-movement-%E2%80%94-forcechangepassword"
+    access: "WinRM as l.wilson_adm"
+    technique: "T1098"
+    command: "Set-ADAccountPassword -Identity l.wilson_adm -Reset"
+    detect: "Event 4724: a password reset on an admin account performed by a standard user, followed by a network logon (4624) for that admin account over WinRM."
   - label: "RBCD to SYSTEM on RODC01"
     anchor: "privilege-escalation-%E2%80%94-rbcd-into-the-rodc"
+    access: "SYSTEM on RODC01"
+    technique: "T1548"
+    command: "bloodyAD ... add rbcd 'RODC01$' 'FAKEBOX$'"
+    detect: "Event 4741 for a computer account created by a standard user, then Event 5136 for a write to msDS-AllowedToActOnBehalfOfOtherIdentity on a domain controller object, then a 4769 service-ticket request for cifs/RODC01 on behalf of Administrator."
   - label: "Dump the RODC krbtgt key"
     anchor: "dumping-the-rodc%E2%80%99s-krbtgt"
+    access: "SYSTEM on RODC01, holding the RODC krbtgt key"
+    technique: "T1003.004"
+    command: "lsadump::lsa /inject /name:krbtgt_8245"
+    detect: "Mimikatz on a domain controller: an unexpected process opening lsass.exe (Sysmon Event 10). Most EDR and SIEM rule sets, Wazuh's included, flag it out of the box."
   - label: "Modify the Password Replication Policy"
     anchor: "domain-compromise-%E2%80%94-the-rodc-golden-ticket"
+    access: "RODC Administrators member"
+    technique: "T1098"
+    command: "bloodyAD ... set object 'RODC01$' msDS-RevealOnDemandGroup -v 'CN=Administrator,...'"
+    detect: "A group-membership change adding a user to RODC Administrators, then Event 5136 changes to msDS-NeverRevealGroup and msDS-RevealOnDemandGroup on the RODC object. Those attributes almost never change."
   - label: "RODC golden ticket, then DCSync"
     anchor: "domain-compromise-%E2%80%94-the-rodc-golden-ticket"
+    access: "Domain admin"
+    technique: "T1558.001"
+    command: "Rubeus.exe golden /rodcNumber:8245 /aes256:<key> /user:Administrator ..."
+    detect: "A ticket signed with the RODC's krbtgt presented to the writable DC for an account the RODC should never hold, then Event 4662 with replication rights (DCSync) from a host that is not a domain controller."
 ---
 
 Garfield is an assume-breach Active Directory box with two domain controllers: `DC01`, the writable DC you can reach, and `RODC01`, a read-only domain controller on an internal subnet. The chain runs through six distinct techniques, and the starting point is a single attribute write that BloodHound never surfaced. This one taught me more about Kerberos than anything before it, mostly through things going wrong.

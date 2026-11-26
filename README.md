@@ -39,11 +39,17 @@ ports: ["22/ssh", "80/http"]
 cves:
   - { id: CVE-2023-43208, severity: Critical }   # Critical | High | Medium | Low
 tools: [nmap, curl, hashcat]
+featured: true                     # show this one large on the home page
 attackPath:
   - label: "Short step name"
     anchor: "reconnaissance"       # id of the heading this step links to
+    access: "None"                 # who you are after this step
+    technique: "T1190"             # one ATT&CK ID, must be in _data/attack.json
+    command: "the one command that mattered"
+    detect: "What a defender would see."      # offense writeups
   - label: "Next step"
     anchor: "initial-access-%E2%80%94-cve-2023-43208"
+    finding: "What this step established."    # defense writeups, instead of access/detect
 ---
 ```
 
@@ -53,7 +59,9 @@ Projects and blog posts only need `title`, `date`, `summary` and optionally `tag
 
 | Field | What it does |
 |---|---|
-| `attackPath` | Ordered `{ label, anchor }` steps. Renders the clickable step diagram above the prose (left-to-right, stacked under 40rem) and highlights the step you are reading. Defense writeups get the same component titled "Investigation path". Keep the text version of the path in the Markdown too. |
+| `attackPath` | Ordered steps. `label` and `anchor` are required and draw the step diagram above the prose (left-to-right, stacked under 40rem). The optional `access`, `technique`, `command`, `detect` and `finding` fill the panel that opens when a step is selected; leave any of them out and that row is skipped. Selecting follows the section you are reading, and a slim bar at the top of the page shows the step and access level once the diagram has scrolled away. Defense writeups get the same component titled "Investigation path". Keep the text version of the path in the Markdown too. |
+| `featured` | `true` on one writeup puts it in the large slot on the home page with its diagram. With none marked, the newest is used. |
+| `category` | `Offense` or `Defense`. Besides grouping, it sets the colour identity: `--attack` red for offense, `--defend` blue for defense, on cards, pills and the step diagram. |
 | `attack` | MITRE ATT&CK Enterprise technique IDs. Feeds the heatmap and its filter on `/writeups/`. |
 | `ports` | `"port/service"` strings, shown in the "At a glance" box. |
 | `cves` | `{ id, severity }` objects. Each ID links to NVD; take the severity from the NVD record. |
@@ -61,10 +69,18 @@ Projects and blog posts only need `title`, `date`, `summary` and optionally `tag
 
 Notes:
 
+- **Keep secrets out of `command`.** It is shown on the page. Use `<key>`, `...` or a placeholder, the same as in the prose.
+- **`detect` lines are claims.** Only write what you have seen or can cite; "offline, nothing visible on the target" is a valid answer.
 - **Anchors.** `anchor` is the `id` markdown-it-anchor gives the heading (`h2` or `h3`). It is the lowercased heading with spaces as hyphens and everything else percent-encoded, so `## Initial access — CVE-2023-43208` becomes `initial-access-%E2%80%94-cve-2023-43208`. Don't guess: run `npm run build` and copy it from the page, e.g. `grep -o '<h[23] id="[^"]*"' _site/writeups/<slug>/index.html`. Quote the value in YAML.
 - **New ATT&CK techniques.** A technique only appears in the heatmap if it is also listed, with its name, under its tactic in `src/_data/attack.json`. That file holds the 14 Enterprise tactics and only the techniques the site uses, each under one primary tactic. Use real IDs from [attack.mitre.org](https://attack.mitre.org/).
 - **`attack` is two things.** It is the global data file above and the per-writeup list. `eleventy.config.js` turns data deep-merge off so the front matter list replaces the global on that page instead of blending with it. Don't turn deep-merge back on without renaming one of them.
 - Platform, OS and Difficulty filter chips on `/writeups/` are generated from the existing `platform`, `os` and `difficulty` fields; nothing extra to maintain.
+
+### Home page
+
+- **Proof strip.** The four numbers are counted from the writeups at build time (writeups, distinct `attack` IDs, distinct `cves`). Only "Certification earned" is typed by hand, in `src/index.njk`.
+- **Now line.** `now` in `src/_data/site.json`. Delete the key to hide it.
+- **One attack, both chairs.** `src/_data/chairs.json`: each entry has `title`, `attack` (what you do), `defend` (what it leaves behind), and `source` + `url` for the writeup or project it comes from. Keep it to things you have actually done and observed.
 
 ### About-page timeline
 

@@ -1,0 +1,26 @@
+[
+  {
+    "id": "asrep",
+    "title": "AS-REP roasting",
+    "attack": "Find an account with Kerberos pre-authentication disabled, request a ticket for it without knowing the password, and crack it offline.",
+    "defend": "Event 4768 on the domain controller for a dormant account, from an address that is not a DC, with status 0x0. One event, and it stands out against a baseline of requests from ::1.",
+    "source": "Sherlock Campfire-2",
+    "url": "/writeups/htb-sherlock-campfire-2/"
+  },
+  {
+    "id": "rdp",
+    "title": "RDP brute force",
+    "attack": "Run a password list against RDP on the domain controller from the Kali box.",
+    "defend": "A storm of Event ID 4625 failed logons from a single source, visible on the Wazuh dashboard as it happens.",
+    "source": "Purple-team homelab",
+    "url": "/projects/purple-team-homelab/"
+  },
+  {
+    "id": "rbcd",
+    "title": "Delegation abuse (RBCD)",
+    "attack": "With write access to msDS-AllowedToActOnBehalfOfOtherIdentity on a computer object, add a machine account you control and impersonate an administrator to that host.",
+    "defend": "Alert on any write to msDS-AllowedToActOnBehalfOfOtherIdentity, and set ms-DS-MachineAccountQuota to 0 so a standard user cannot create the machine account in the first place.",
+    "source": "HTB Garfield",
+    "url": "/writeups/htb-garfield/"
+  }
+]

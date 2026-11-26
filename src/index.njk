@@ -2,27 +2,86 @@
 layout: base.njk
 title: Joshua Thomas
 ---
+{#- Featured writeup: the first one with `featured: true`, else the newest. -#}
+{%- set featured = collections.writeups | featuredItem -%}
+
 <section class="hero">
-  <h1>Joshua Thomas</h1>
-  <p class="lede" data-typed>Cybersecurity student at NHTI with a defensive certification already in hand and an offensive one in progress. I document what I break, what I detect, and what I learned doing it.</p>
-  <div class="cta">
-    <a class="btn primary" href="{{ '/writeups/' | url }}">Read the writeups</a>
-    <a class="btn" href="{{ '/about/' | url }}">About me</a>
+  <div class="hero-main">
+    <p class="eyebrow mono">{{ site.tagline }}</p>
+    <h1>Joshua Thomas</h1>
+    <p class="lede" data-typed>Cybersecurity student at NHTI with a defensive certification already in hand and an offensive one in progress. I document what I break, what I detect, and what I learned doing it.</p>
+    <div class="cta">
+      <a class="btn primary" href="{{ '/writeups/' | url }}">Read the writeups</a>
+      <a class="btn" href="{{ '/about/' | url }}">About me</a>
+    </div>
+    <ul class="creds" aria-label="Credentials">
+      <li><strong>HTB CDSA</strong> — Certified Defensive Security Analyst</li>
+      <li><strong>HTB CPTS</strong> — in progress</li>
+      <li><strong>CompTIA Security+</strong> — in progress</li>
+      <li><strong>A.S. Networking &amp; Cybersecurity Operations</strong> — NHTI, in progress</li>
+    </ul>
   </div>
-  <ul class="creds" aria-label="Credentials">
-    <li><strong>HTB CDSA</strong> — Certified Defensive Security Analyst</li>
-    <li><strong>HTB CPTS</strong> — in progress</li>
-    <li><strong>CompTIA Security+</strong> — in progress</li>
-    <li><strong>A.S. Networking &amp; Cybersecurity Operations</strong> — NHTI, in progress</li>
-  </ul>
+  {#- Counted from the writeups at build time, so it never goes stale. #}
+  <dl class="proof" aria-label="At a glance">
+    <div><dt>Writeups</dt><dd>{{ collections.writeups | length }}</dd></div>
+    <div><dt>ATT&amp;CK techniques</dt><dd>{{ collections.writeups | techniqueTotal }}</dd></div>
+    <div><dt>CVEs exploited</dt><dd>{{ collections.writeups | cveTotal }}</dd></div>
+    <div><dt>Certification earned</dt><dd>1 <span class="proof-note">HTB CDSA</span></dd></div>
+  </dl>
+</section>
+
+{% if site.now %}<p class="now"><span class="now-label">Now</span> {{ site.now }}</p>{% endif %}
+
+<section class="chairs" aria-labelledby="chairs-title" data-chairs>
+  <div class="section-head">
+    <h2 id="chairs-title">One attack, both chairs</h2>
+  </div>
+  <p class="chairs-intro">I learned the defensive side first. For every technique I use, I want to know what it leaves behind.</p>
+  <div class="chairs-tabs" role="tablist" aria-label="Technique" data-chairs-tabs hidden>
+    {%- for c in chairs %}
+    <button type="button" class="chip" role="tab" id="chair-tab-{{ c.id }}" aria-controls="chair-{{ c.id }}" aria-selected="{{ 'true' if loop.first else 'false' }}"{% if not loop.first %} tabindex="-1"{% endif %}>{{ c.title }}</button>
+    {%- endfor %}
+  </div>
+  {%- for c in chairs %}
+  <article class="chair" id="chair-{{ c.id }}" aria-labelledby="chair-title-{{ c.id }}">
+    <h3 class="chair-title" id="chair-title-{{ c.id }}">{{ c.title }}</h3>
+    <div class="chair-sides">
+      <div class="chair-side cat-offense">
+        <p class="chair-label"><span class="cat-pill">Attacker</span> What I do</p>
+        <p>{{ c.attack }}</p>
+      </div>
+      <div class="chair-side cat-defense">
+        <p class="chair-label"><span class="cat-pill">Defender</span> What it leaves behind</p>
+        <p>{{ c.defend }}</p>
+      </div>
+    </div>
+    <p class="chair-source">From <a href="{{ c.url | url }}">{{ c.source }}</a></p>
+  </article>
+  {%- endfor %}
 </section>
 
 <div class="section-head">
-  <h2>Recent writeups</h2>
+  <h2>Featured writeup</h2>
   <a href="{{ '/writeups/' | url }}">All writeups →</a>
 </div>
+<article class="featured cat-{{ featured.data.category | lower }}">
+  <p class="card-meta"><span class="cat-pill">{{ featured.data.category }}</span> {{ featured.data.platform }} · {{ featured.data.difficulty }} · {{ featured.data.os }}</p>
+  <h3><a href="{{ featured.url | url }}">{{ featured.data.title }}</a></h3>
+  <p>{{ featured.data.summary }}</p>
+  {%- if featured.data.attackPath %}
+  {%- set attackPath = featured.data.attackPath %}
+  {%- set category = featured.data.category %}
+  {%- set apBase = featured.url | url %}
+  {%- set apCompact = true %}
+  {% include "attack-path.njk" %}
+  {%- endif %}
+</article>
+
+<div class="section-head">
+  <h2>More writeups</h2>
+</div>
 <ul class="cards">
-  {% for item in collections.writeups | head(4) %}{% include "list-item.njk" %}{% endfor %}
+  {% for item in collections.writeups | withoutItem(featured) | head(3) %}{% include "list-item.njk" %}{% endfor %}
 </ul>
 
 <div class="section-head">

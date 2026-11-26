@@ -16,12 +16,28 @@ tools: [nmap, feroxbuster, ffuf, curl, pycryptodome, sqlite3, hashcat]
 attackPath:
   - label: "Vhost fuzzing finds Nginx UI"
     anchor: "enumeration"
+    access: "None"
+    technique: "T1595.003"
+    command: "ffuf -u http://snapped.htb/ -H \"Host: FUZZ.snapped.htb\" -fs 20199"
+    detect: "Thousands of requests in seconds from one address, each with a different Host header."
   - label: "Backup endpoint leaks its AES key"
     anchor: "foothold-%E2%80%94-cve-2026-27944"
+    access: "None, holding the backup and its key"
+    technique: "T1190"
+    command: "curl -s -D headers.txt http://admin.snapped.htb/api/backup -o backup.zip"
+    detect: "An unauthenticated GET to /api/backup answered with a 200 and a large body. It is one line in the nginx access log, and no client without a session should ever get that response."
   - label: "Decrypt, crack bcrypt, SSH"
     anchor: "foothold-%E2%80%94-cve-2026-27944"
+    access: "SSH as jonathan"
+    technique: "T1110.002"
+    command: "hashcat -m 3200 hashes.txt rockyou.txt"
+    detect: "Decryption and cracking are offline. The visible event is an SSH login for jonathan from an address that has never logged in before, shortly after the backup request."
   - label: "snap-confine race to root"
     anchor: "privilege-escalation-%E2%80%94-cve-2026-3888"
+    access: "root"
+    technique: "T1068"
+    command: "./exploit ./librootshell.so"
+    detect: "/tmp/.snap removed and recreated by an unprivileged user, then snap-confine loading a shared object from a user-writable path. auditd watches on /tmp/.snap and on snap-confine cover it."
 ---
 
 Snapped is rated Hard but the community rated the user portion Easy, and that's about right: the foothold is a clean pre-auth bug with one crypto detail that trips people up, and the privilege escalation is a recent snapd CVE whose preconditions the box has already arranged for you. The value here was in understanding *why* each step works.

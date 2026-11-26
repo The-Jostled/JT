@@ -129,7 +129,7 @@ img { max-width: 100%; height: auto; border-radius: 6px; }
 /* ---------- Focus, motion, helpers ---------- */
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
-.prose h2, .prose h3 { scroll-margin-top: 1rem; }
+.prose h2, .prose h3 { scroll-margin-top: 3.5rem; } /* clears the reading-position bar */
 @media (prefers-reduced-motion: no-preference) {
   html { scroll-behavior: smooth; }
 }
@@ -145,9 +145,11 @@ img { max-width: 100%; height: auto; border-radius: 6px; }
 .ap-node:hover rect { stroke: var(--accent); }
 .ap-node:focus-visible { outline: none; }
 .ap-node:focus-visible rect { stroke: var(--accent); stroke-width: 3; stroke-dasharray: 5 3; }
-/* Current step: heavier border and filled number, not colour alone */
-.ap-node[aria-current] rect { fill: var(--bg); stroke: var(--accent); stroke-width: 2.5; }
-.ap-node[aria-current] .ap-num { fill: var(--accent); font-weight: 700; }
+/* Selected step: heavier border in the category colour and a bold number, not colour alone */
+.ap-node[aria-selected="true"] rect { fill: var(--bg); stroke: var(--cat, var(--accent)); stroke-width: 2.5; }
+.ap-node[aria-selected="true"] .ap-num { fill: var(--cat, var(--accent)); font-weight: 700; }
+.ap-line.is-done { stroke: var(--cat, var(--accent)); stroke-width: 2.25; }
+.ap-head.is-done { fill: var(--cat, var(--accent)); }
 .ap-label { fill: var(--fg); font-size: 12px; }
 .ap-num { fill: var(--fg-muted); font-family: var(--font-mono); font-size: 10.5px; }
 .ap-line { fill: none; stroke: var(--fg-muted); stroke-width: 1.25; }
@@ -275,3 +277,115 @@ img { max-width: 100%; height: auto; border-radius: 6px; }
 .filter-status { margin-top: 0.8rem; }
 .filter-empty { margin-top: 1.5rem; color: var(--fg-muted); }
 [hidden] { display: none !important; }
+
+/* =====================================================================
+   Second pass: attack/defend identity, landing page, stepper
+   ===================================================================== */
+
+/* ---------- Category identity ----------
+   Offense is --attack, defense is --defend. Anything inside a .cat-* element
+   can use --cat. The pill always carries the word, so colour is never alone. */
+.cat-offense { --cat: var(--attack); }
+.cat-defense { --cat: var(--defend); }
+.cat-pill { display: inline-block; padding: 0 0.45rem; border: 1px solid var(--cat, var(--fg-muted)); border-radius: 4px; color: var(--cat, var(--fg-muted)); font-family: var(--font-mono); font-size: 0.7rem; font-weight: 600; line-height: 1.55; letter-spacing: 0.04em; text-transform: uppercase; vertical-align: 0.05em; }
+.mono { font-family: var(--font-mono); font-size: 0.9em; }
+.card[class*="cat-"] a { border-left: 3px solid var(--cat); }
+.card[class*="cat-"] a:hover { border-left-color: var(--cat); }
+
+/* ---------- Type and surfaces ---------- */
+h1 { font-size: 2.2rem; font-weight: 720; letter-spacing: -0.02em; }
+.section-head h2 { font-size: 1.5rem; }
+.card a:hover { box-shadow: 0 6px 16px -10px var(--fg-muted); }
+@media (prefers-reduced-motion: no-preference) {
+  .card a, .btn, .chip, .tech, .card-tech { transition: transform 0.12s ease, border-color 0.12s ease, background-color 0.12s ease, box-shadow 0.12s ease, opacity 0.12s ease; }
+  .card a:hover { transform: translateY(-2px); }
+  .card a:active, .btn:active { transform: translateY(1px); }
+}
+
+/* ---------- Home: hero band ---------- */
+/* The band runs edge to edge: a huge spread shadow in the band colour, clipped vertically */
+.hero { max-width: none; display: grid; gap: 2rem; margin: -2.5rem 0 0; padding: 3.2rem 0 2.6rem; background: var(--bg-elev); box-shadow: 0 0 0 100vmax var(--bg-elev); clip-path: inset(0 -100vmax); }
+.hero h1 { font-size: 2.9rem; font-weight: 760; letter-spacing: -0.03em; margin-bottom: 0.6rem; }
+.hero .eyebrow { margin-bottom: 0.7rem; font-size: 0.8rem; letter-spacing: 0; text-transform: none; color: var(--accent); }
+.hero .lede { max-width: 36rem; color: var(--fg); }
+.hero .btn:not(.primary), .hero .creds li { background: var(--bg); }
+.proof { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.6rem; margin: 0; }
+.proof div { display: flex; flex-direction: column-reverse; justify-content: flex-end; padding: 0.75rem 0.9rem; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); }
+.proof dt { font-size: 0.78rem; color: var(--fg-muted); line-height: 1.3; }
+.proof dd { margin: 0 0 0.15rem; font-size: 2rem; font-weight: 720; line-height: 1.1; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.proof-note { font-family: var(--font-mono); font-size: 0.72rem; font-weight: 500; letter-spacing: 0; color: var(--fg-muted); }
+@media (min-width: 56rem) {
+  .hero { grid-template-columns: minmax(0, 1fr) 18rem; align-items: center; column-gap: 3rem; }
+}
+@media (max-width: 40rem) {
+  .hero { padding: 2.2rem 0 2rem; }
+  .hero h1 { font-size: 2.2rem; }
+}
+.now { margin: 1.6rem 0 0; padding: 0.6rem 0.9rem; border-left: 3px solid var(--accent); background: var(--bg-elev); font-size: 0.95rem; }
+.now-label { margin-right: 0.5rem; font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); }
+
+/* ---------- Home: one attack, both chairs ---------- */
+.chairs-intro { max-width: var(--measure); margin: 0.4rem 0 1rem; color: var(--fg-muted); }
+.chairs-tabs { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.8rem; }
+.chairs-tabs .chip { font-size: 0.9rem; padding: 0.25rem 0.8rem; }
+.chairs-tabs .chip[aria-selected="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-fg); font-weight: 600; }
+.chair { margin-bottom: 1.4rem; }
+.chair-title { margin: 0 0 0.6rem; }
+.chairs.is-tabbed .chair { margin-bottom: 0; }
+.chairs.is-tabbed .chair-title { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); } /* the tab already names it */
+.chair-sides { display: grid; gap: 0.8rem; }
+@media (min-width: 44rem) { .chair-sides { grid-template-columns: 1fr 1fr; } }
+.chair-side { padding: 0.9rem 1rem 1rem; border: 1px solid var(--line); border-top: 3px solid var(--cat); border-radius: 8px; background: var(--bg); }
+.chair-side p:last-child { margin: 0; }
+.chair-label { margin-bottom: 0.5rem; font-size: 0.85rem; color: var(--fg-muted); }
+.chair-label .cat-pill { margin-right: 0.35rem; }
+.chair-source { margin: 0.6rem 0 0; font-size: 0.88rem; color: var(--fg-muted); }
+
+/* ---------- Home: featured writeup ---------- */
+.featured { margin-top: 1rem; padding: 1.2rem 1.3rem 1.3rem; border: 1px solid var(--line); border-left: 3px solid var(--cat, var(--accent)); border-radius: 8px; background: var(--bg); }
+.featured .card-meta { margin: 0; font-size: 0.82rem; color: var(--fg-muted); }
+.featured h3 { margin: 0.4rem 0 0.4rem; font-size: 1.3rem; }
+.featured h3 a { text-decoration: none; }
+.featured h3 a:hover { text-decoration: underline; }
+.featured > p { max-width: var(--measure); color: var(--fg-muted); }
+.featured .attack-path { margin: 1.1rem 0 0; }
+
+/* ---------- Attack path: step panels ---------- */
+.ap-steps { list-style: none; display: grid; gap: 0.8rem; margin: 1rem 0 0; padding: 0; }
+.ap-step { padding: 0.9rem 1.1rem 1rem; border: 1px solid var(--line); border-left: 3px solid var(--cat, var(--accent)); border-radius: 8px; background: var(--bg-elev); }
+.is-stepper .ap-step:not(.is-active) { display: none; }
+.ap-step-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin: 0 0 0.25rem; font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--fg-muted); }
+/* Progress through the chain: one segment per step, filled up to this one */
+.ap-meter { display: flex; gap: 3px; }
+.ap-meter span { width: 1.3rem; height: 0.35rem; border-radius: 2px; background: var(--line); }
+.ap-meter .on { background: var(--cat, var(--accent)); }
+.ap-step-title { margin: 0 0 0.8rem; padding: 0; font-size: 1.12rem; }
+.ap-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 0.7rem 1.5rem; margin: 0; }
+.ap-wide { grid-column: 1 / -1; }
+.ap-facts dt { margin-bottom: 0.15rem; font-size: 0.76rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--fg-muted); }
+.ap-facts dd { margin: 0; font-size: 0.93rem; }
+.ap-facts code { display: block; padding: 0.4rem 0.6rem; overflow-x: auto; white-space: nowrap; border: 1px solid var(--line); background: var(--bg); font-size: 0.82rem; }
+.ap-defend { padding-left: 0.75rem; border-left: 2px solid var(--defend); }
+.ap-defend dt { color: var(--defend); }
+.ap-step-foot { margin: 0.9rem 0 0; font-size: 0.9rem; }
+
+/* ---------- Attack path: reading-position bar ---------- */
+.ap-progress { position: fixed; z-index: 5; top: 0; left: 0; right: 0; border-bottom: 1px solid var(--line); background: var(--bg); }
+.ap-progress .wrap { display: flex; align-items: center; gap: 1rem; padding-block: 0.3rem; }
+.ap-progress-segs { list-style: none; display: flex; flex: 0 0 auto; gap: 4px; margin: 0; padding: 0; }
+.ap-progress-segs a { display: block; width: 1.5rem; padding: 0.55rem 0; }
+.ap-progress-segs a::before { content: ""; display: block; height: 0.35rem; border-radius: 2px; background: var(--line); }
+.ap-progress-segs .is-done a::before { background: var(--cat, var(--accent)); }
+/* Current step is taller as well as coloured */
+.ap-progress-segs a[aria-current]::before { height: 0.75rem; margin: -0.2rem 0; background: var(--cat, var(--accent)); }
+.ap-progress-label { min-width: 0; margin: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 0.85rem; color: var(--fg-muted); }
+.ap-progress-label strong { color: var(--fg); }
+
+/* ---------- Writeups index: cards and matrix light each other up ---------- */
+.card .card-attack { display: flex; flex-wrap: wrap; gap: 0.25rem; margin-top: 0.55rem; }
+.card-tech { padding: 0 0.35rem; border: 1px solid var(--line); border-radius: 3px; font-family: var(--font-mono); font-size: 0.7rem; line-height: 1.6; color: var(--fg-muted); }
+.card-tech.is-lit { border-color: var(--fg); background: var(--bg-elev); color: var(--fg); font-weight: 700; }
+.card.is-dim { opacity: 0.45; }
+.card.is-match a { border-color: var(--accent); background: var(--bg-elev); }
+.tech.is-dim { opacity: 0.35; }
+.tech.is-lit { border-color: var(--accent); box-shadow: inset 0 0 0 2px var(--accent); }

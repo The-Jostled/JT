@@ -1,6 +1,7 @@
 import syntaxHighlight from "@11ty/eleventy-plugin-syntaxhighlight";
 import markdownIt from "markdown-it";
 import markdownItAnchor from "markdown-it-anchor";
+import fs from "node:fs";
 
 export default function (eleventyConfig) {
   eleventyConfig.addPlugin(syntaxHighlight);
@@ -49,6 +50,30 @@ export default function (eleventyConfig) {
   // How many items in a collection list an ATT&CK technique ID in front matter
   eleventyConfig.addFilter("attackCount", (items, id) =>
     (items || []).filter((i) => (i.data.attack || []).includes(id)).length
+  );
+
+  // Technique ID -> name. Read from the data file directly because writeup
+  // pages shadow the global `attack` with their own front matter list.
+  const techniqueNames = {};
+  for (const tactic of JSON.parse(fs.readFileSync("src/_data/attack.json", "utf8")).tactics) {
+    for (const t of tactic.techniques) techniqueNames[t.id] = t.name;
+  }
+  eleventyConfig.addFilter("techniqueName", (id) => techniqueNames[id] || "");
+
+  // Home page: the first item marked `featured: true`, else the newest
+  eleventyConfig.addFilter("featuredItem", (items) =>
+    (items || []).find((i) => i.data.featured) || (items || [])[0]
+  );
+  eleventyConfig.addFilter("withoutItem", (items, item) =>
+    (items || []).filter((i) => i.url !== (item && item.url))
+  );
+
+  // Home-page proof strip: totals across a collection
+  eleventyConfig.addFilter("techniqueTotal", (items) =>
+    new Set((items || []).flatMap((i) => i.data.attack || [])).size
+  );
+  eleventyConfig.addFilter("cveTotal", (items) =>
+    new Set((items || []).flatMap((i) => (i.data.cves || []).map((c) => c.id))).size
   );
 
   // Distinct front matter values for a key, for building filter chips.

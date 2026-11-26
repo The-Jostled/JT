@@ -10,7 +10,7 @@ layout: base.njk
       {% if platform %}<div><dt>Platform</dt><dd>{{ platform }}</dd></div>{% endif %}
       {% if difficulty %}<div><dt>Difficulty</dt><dd>{{ difficulty }}</dd></div>{% endif %}
       {% if os %}<div><dt>OS</dt><dd>{{ os }}</dd></div>{% endif %}
-      {% if category %}<div><dt>Category</dt><dd>{{ category }}</dd></div>{% endif %}
+      {% if category %}<div class="cat-{{ category | lower }}"><dt>Category</dt><dd><span class="cat-pill">{{ category }}</span></dd></div>{% endif %}
       <div><dt>Date</dt><dd><time datetime="{{ date | isoDate }}">{{ date | readableDate }}</time></dd></div>
     </dl>
     {% if tags %}<ul class="tags">{% for t in tags %}<li>{{ t }}</li>{% endfor %}</ul>{% endif %}
