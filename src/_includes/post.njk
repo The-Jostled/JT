@@ -16,7 +16,26 @@ layout: base.njk
     {% if tags %}<ul class="tags">{% for t in tags %}<li>{{ t }}</li>{% endfor %}</ul>{% endif %}
   </header>
   {% if attackPath %}{% include "attack-path.njk" %}{% endif %}
-  <div class="prose">
-    {{ content | safe }}
+  {%- set hasGlance = section == "writeups" and (ports or cves or tools) %}
+  <div class="post-body{% if hasGlance %} has-glance{% endif %}">
+    {%- if hasGlance %}
+    <aside class="glance" aria-labelledby="glance-title">
+      <h2 id="glance-title">At a glance</h2>
+      <dl>
+        {%- if ports %}
+        <div><dt>Open ports</dt><dd><ul class="tags">{% for p in ports %}<li>{{ p }}</li>{% endfor %}</ul></dd></div>
+        {%- endif %}
+        {%- if cves %}
+        <div><dt>CVEs</dt><dd><ul class="cve-list">{% for c in cves %}<li><a href="https://nvd.nist.gov/vuln/detail/{{ c.id }}">{{ c.id }}</a> <span class="sev sev-{{ c.severity | lower }}">{{ c.severity }}</span></li>{% endfor %}</ul></dd></div>
+        {%- endif %}
+        {%- if tools %}
+        <div><dt>Tools</dt><dd><ul class="tags">{% for t in tools %}<li>{{ t }}</li>{% endfor %}</ul></dd></div>
+        {%- endif %}
+      </dl>
+    </aside>
+    {%- endif %}
+    <div class="prose">
+      {{ content | safe }}
+    </div>
   </div>
 </article>

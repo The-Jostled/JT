@@ -31,6 +31,15 @@ section: false
 </section>
 
 <div class="filter-bar" data-filter-bar hidden>
+  {#- Chips are generated from the collection. Multi-select within a row, AND across rows. #}
+  {%- for row in [["platform", "Platform"], ["os", "OS"], ["difficulty", "Difficulty"]] %}
+  <div class="chip-row" role="group" aria-labelledby="chips-{{ row[0] }}">
+    <span class="chip-label" id="chips-{{ row[0] }}">{{ row[1] }}</span>
+    {%- for value in collections.writeups | uniqueValues(row[0]) %}
+    <button type="button" class="chip" data-filter-key="{{ row[0] }}" data-filter-value="{{ value }}" aria-pressed="false">{{ value }}</button>
+    {%- endfor %}
+  </div>
+  {%- endfor %}
   <p class="filter-status">
     <span data-filter-status role="status">Showing all {{ collections.writeups | length }} writeups</span>
     <button type="button" class="chip chip-clear" data-filter-clear hidden>Clear filters</button>
