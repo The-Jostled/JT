@@ -233,10 +233,11 @@ img { max-width: 100%; height: auto; border-radius: 6px; }
 /* Runs once: site.js arms it, then marks the list and each entry as they scroll in.
    Without JS or with reduced motion nothing is armed, so everything is just visible. */
 @media (prefers-reduced-motion: no-preference) {
-  .timeline.is-armed::before { transform: scaleY(0); transition: transform 1.4s ease-out; }
-  .timeline.is-armed.is-drawn::before { transform: none; }
-  .timeline.is-armed li { opacity: 0; transition: opacity 0.5s ease-out; }
-  .timeline.is-armed li.is-in { opacity: 1; }
+  /* Transitions live on the end states only, so arming never animates anything out */
+  .timeline.is-armed::before { transform: scaleY(0); }
+  .timeline.is-armed.is-drawn::before { transform: none; transition: transform 1.4s ease-out; }
+  .timeline.is-armed li { opacity: 0; }
+  .timeline.is-armed li.is-in { opacity: 1; transition: opacity 0.5s ease-out; }
 }
 
 /* ---------- ATT&CK matrix (writeups index) ---------- */
@@ -244,8 +245,8 @@ img { max-width: 100%; height: auto; border-radius: 6px; }
 .matrix-intro { color: var(--fg-muted); font-size: 0.92rem; max-width: var(--measure); margin-bottom: 0.8rem; }
 /* Scrolls sideways on narrow screens instead of squeezing the columns */
 .matrix-scroll { overflow-x: auto; padding: 4px; margin: 0 -4px; }
-.matrix { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(6.1rem, 1fr); gap: 0.35rem; }
-.tactic h3 { margin: 0 0 0.35rem; min-height: 2.5em; display: flex; align-items: flex-end; font-size: 0.68rem; font-weight: 600; line-height: 1.25; text-transform: uppercase; letter-spacing: 0.04em; color: var(--fg-muted); }
+.matrix { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(6.3rem, 1fr); gap: 0.3rem; }
+.tactic h3 { margin: 0 0 0.35rem; min-height: 2.5em; display: flex; align-items: flex-end; font-size: 0.64rem; font-weight: 600; line-height: 1.25; text-transform: uppercase; letter-spacing: 0.02em; color: var(--fg-muted); }
 .tactic ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.3rem; }
 .tech { position: relative; isolation: isolate; overflow: hidden; display: flex; width: 100%; justify-content: space-between; align-items: baseline; gap: 0.3rem; padding: 0.3rem 0.4rem; border: 1px solid var(--line); border-radius: 4px; background: none; color: var(--fg); font-family: var(--font-mono); font-size: 0.72rem; line-height: 1.3; cursor: pointer; }
 /* Shading is --accent at a stepped opacity; the count in the cell carries the same information */
