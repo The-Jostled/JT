@@ -8,6 +8,12 @@ category: Offense
 summary: "Three CVEs chained end to end: file read through Apache CXF, authenticated RCE in Hoverfly, and a TOCTOU in PackageKit that installs a package as root without asking polkit."
 tags: [xxe, apache-cxf, hoverfly, packagekit, cve-2026-41651, linpeas, privesc]
 attack: [T1046, T1190, T1552.001, T1059.004, T1068, T1548.001]
+ports: ["21/ftp", "22/ssh", "80/http", "8080/soap", "8500/proxy", "8888/hoverfly"]
+cves:
+  - { id: CVE-2022-46364, severity: Critical }
+  - { id: CVE-2025-54123, severity: Critical }
+  - { id: CVE-2026-41651, severity: High }
+tools: [curl, LinPEAS, pkcon]
 attackPath:
   - label: "Anonymous FTP leaks the service JAR"
     anchor: "reconnaissance"
