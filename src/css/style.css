@@ -120,3 +120,34 @@ img { max-width: 100%; height: auto; border-radius: 6px; }
   html { font-size: 16px; }
   .hero h1 { font-size: 1.9rem; }
 }
+
+/* ---------- Focus, motion, helpers ---------- */
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.prose h2, .prose h3 { scroll-margin-top: 1rem; }
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+
+/* ---------- Attack-path diagram ---------- */
+.attack-path { margin: 0 0 2rem; }
+.ap-title { margin: 0 0 0.5rem; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--fg-muted); }
+.ap-scroll { overflow-x: auto; padding: 4px; margin: -4px; }
+.ap { display: block; width: 100%; height: auto; overflow: visible; font-family: var(--font-sans); }
+.ap-v { display: none; }
+.ap-node { text-decoration: none; cursor: pointer; }
+.ap-node rect { fill: var(--bg-elev); stroke: var(--fg-muted); stroke-width: 1; }
+.ap-node:hover rect { stroke: var(--accent); }
+.ap-node:focus-visible { outline: none; }
+.ap-node:focus-visible rect { stroke: var(--accent); stroke-width: 3; stroke-dasharray: 5 3; }
+/* Current step: heavier border and filled number, not colour alone */
+.ap-node[aria-current] rect { fill: var(--bg); stroke: var(--accent); stroke-width: 2.5; }
+.ap-node[aria-current] .ap-num { fill: var(--accent); font-weight: 700; }
+.ap-label { fill: var(--fg); font-size: 12px; }
+.ap-num { fill: var(--fg-muted); font-family: var(--font-mono); font-size: 10.5px; }
+.ap-line { fill: none; stroke: var(--fg-muted); stroke-width: 1.25; }
+.ap-head { fill: var(--fg-muted); }
+@media (max-width: 40rem) {
+  .ap-h { display: none; }
+  .ap-v { display: block; }
+}

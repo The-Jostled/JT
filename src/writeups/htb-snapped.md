@@ -7,6 +7,15 @@ os: Linux
 category: Offense
 summary: "An unauthenticated backup endpoint hands over its own AES key in a response header; root comes from a race between snap-confine and systemd-tmpfiles."
 tags: [nginx-ui, cve-2026-27944, aes, bcrypt, hashcat, snapd, cve-2026-3888, race-condition]
+attackPath:
+  - label: "Vhost fuzzing finds Nginx UI"
+    anchor: "enumeration"
+  - label: "Backup endpoint leaks its AES key"
+    anchor: "foothold-%E2%80%94-cve-2026-27944"
+  - label: "Decrypt, crack bcrypt, SSH"
+    anchor: "foothold-%E2%80%94-cve-2026-27944"
+  - label: "snap-confine race to root"
+    anchor: "privilege-escalation-%E2%80%94-cve-2026-3888"
 ---
 
 Snapped is rated Hard but the community rated the user portion Easy, and that's about right: the foothold is a clean pre-auth bug with one crypto detail that trips people up, and the privilege escalation is a recent snapd CVE whose preconditions the box has already arranged for you. The value here was in understanding *why* each step works.

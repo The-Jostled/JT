@@ -1,0 +1,47 @@
+{#- Clickable step diagram. Rendered twice: left-to-right for wide screens,
+    top-to-bottom under 40rem. CSS shows one; the other is display:none. -#}
+{%- set apLabel = "Investigation path" if category == "Defense" else "Attack path" -%}
+{%- set n = attackPath | length -%}
+{%- set hw = 136 -%}{%- set hh = 76 -%}{%- set hgap = 26 -%}
+{%- set hW = n * hw + (n - 1) * hgap + 4 -%}
+{%- set vw = 300 -%}{%- set vh = 44 -%}{%- set vgap = 18 -%}
+{%- set vH = n * vh + (n - 1) * vgap + 4 -%}
+<nav class="attack-path" aria-label="{{ apLabel }}" data-attack-path>
+  <p class="ap-title" aria-hidden="true">{{ apLabel }}</p>
+  <div class="ap-scroll">
+    <svg class="ap ap-h" viewBox="0 0 {{ hW }} {{ hh + 4 }}" width="{{ hW }}" height="{{ hh + 4 }}" style="max-width:{{ hW }}px;min-width:{{ (hW * 0.8) | round }}px">
+      <title>{{ apLabel }}: {{ n }} steps, each linked to its section</title>
+      {%- for step in attackPath %}
+      {%- set x = 2 + loop.index0 * (hw + hgap) -%}
+      {%- set lines = step.label | wrapLabel(19) -%}
+      {%- set ty = 51 - ((lines | length) - 1) * 7.5 %}
+      <a class="ap-node" href="#{{ step.anchor }}">
+        <rect x="{{ x }}" y="2" width="{{ hw }}" height="{{ hh }}" rx="8"/>
+        <text class="ap-num" x="{{ x + 10 }}" y="18" aria-hidden="true">{{ loop.index }}</text>
+        <text class="ap-label" text-anchor="middle" y="{{ ty }}">{% for l in lines %}<tspan x="{{ x + hw / 2 }}"{% if not loop.first %} dy="15"{% endif %}>{{ l }}{% if not loop.last %} {% endif %}</tspan>{% endfor %}</text>
+      </a>
+      {%- if not loop.last %}
+      <path class="ap-line" d="M{{ x + hw + 4 }} {{ 2 + hh / 2 }}h{{ hgap - 15 }}"/>
+      <path class="ap-head" d="M{{ x + hw + hgap - 12 }} {{ hh / 2 - 3 }}l9 5l-9 5z"/>
+      {%- endif %}
+      {%- endfor %}
+    </svg>
+    <svg class="ap ap-v" viewBox="0 0 {{ vw + 4 }} {{ vH }}" width="{{ vw + 4 }}" height="{{ vH }}" style="max-width:{{ vw + 4 }}px">
+      <title>{{ apLabel }}: {{ n }} steps, each linked to its section</title>
+      {%- for step in attackPath %}
+      {%- set y = 2 + loop.index0 * (vh + vgap) -%}
+      {%- set lines = step.label | wrapLabel(40) -%}
+      {%- set ty = y + vh / 2 + 4 - ((lines | length) - 1) * 7.5 %}
+      <a class="ap-node" href="#{{ step.anchor }}">
+        <rect x="2" y="{{ y }}" width="{{ vw }}" height="{{ vh }}" rx="8"/>
+        <text class="ap-num" x="14" y="{{ y + vh / 2 + 4 }}" aria-hidden="true">{{ loop.index }}</text>
+        <text class="ap-label" y="{{ ty }}">{% for l in lines %}<tspan x="34"{% if not loop.first %} dy="15"{% endif %}>{{ l }}{% if not loop.last %} {% endif %}</tspan>{% endfor %}</text>
+      </a>
+      {%- if not loop.last %}
+      <path class="ap-line" d="M{{ 2 + vw / 2 }} {{ y + vh + 3 }}v{{ vgap - 12 }}"/>
+      <path class="ap-head" d="M{{ vw / 2 - 3 }} {{ y + vh + vgap - 10 }}l5 8l5 -8z"/>
+      {%- endif %}
+      {%- endfor %}
+    </svg>
+  </div>
+</nav>

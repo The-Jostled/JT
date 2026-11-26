@@ -13,6 +13,7 @@ export default function (eleventyConfig) {
 
   eleventyConfig.addPassthroughCopy("src/css");
   eleventyConfig.addPassthroughCopy("src/img");
+  eleventyConfig.addPassthroughCopy("src/js");
   eleventyConfig.addPassthroughCopy({ "src/favicon.svg": "favicon.svg" });
 
   // Collections, newest first
@@ -38,6 +39,22 @@ export default function (eleventyConfig) {
   eleventyConfig.addGlobalData("year", () => new Date().getFullYear());
   eleventyConfig.addFilter("head", (arr, n) => (arr || []).slice(0, n));
   eleventyConfig.addFilter("isoDate", (d) => new Date(d).toISOString().slice(0, 10));
+
+  // Greedy word-wrap for SVG labels (SVG text does not wrap on its own)
+  eleventyConfig.addFilter("wrapLabel", (text, max = 20) => {
+    const lines = [];
+    let line = "";
+    for (const word of String(text || "").split(/\s+/).filter(Boolean)) {
+      if (line && (line + " " + word).length > max) {
+        lines.push(line);
+        line = word;
+      } else {
+        line = line ? line + " " + word : word;
+      }
+    }
+    if (line) lines.push(line);
+    return lines;
+  });
 
   return {
     dir: { input: "src", output: "_site", includes: "_includes", data: "_data" },

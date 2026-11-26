@@ -7,6 +7,15 @@ os: Linux
 category: Offense
 summary: "Three CVEs chained end to end: file read through Apache CXF, authenticated RCE in Hoverfly, and a TOCTOU in PackageKit that installs a package as root without asking polkit."
 tags: [xxe, apache-cxf, hoverfly, packagekit, cve-2026-41651, linpeas, privesc]
+attackPath:
+  - label: "Anonymous FTP leaks the service JAR"
+    anchor: "reconnaissance"
+  - label: "XXE file read in Apache CXF"
+    anchor: "initial-access-%E2%80%94-cve-2022-46364"
+  - label: "Hoverfly middleware RCE"
+    anchor: "code-execution-%E2%80%94-cve-2025-54123"
+  - label: "PackageKit race to root"
+    anchor: "privilege-escalation-%E2%80%94-cve-2026-41651"
 ---
 
 DevArea is a developer-services portal with a lot of surface: FTP, a SOAP endpoint, an API-simulation tool, and an internal proxy. The whole box is CVE chaining, which makes it a good exercise in reading advisories carefully rather than in novel technique — and the privilege escalation was a reminder that manual enumeration has blind spots.

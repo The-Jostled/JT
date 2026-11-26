@@ -7,6 +7,17 @@ os: Linux
 category: Offense
 summary: "A hidden Apache NiFi instance gives code execution; root requires reading the plant's own operating manual and driving a simulated PLC over OPC-UA into a privileged maintenance state."
 tags: [nifi, h2, opc-ua, ics, jdbc-rce, pdf-cracking, sudo]
+attackPath:
+  - label: "Vhost fuzzing finds open NiFi"
+    anchor: "reconnaissance"
+  - label: "H2 connection abused for code execution"
+    anchor: "foothold-%E2%80%94-code-execution-through-nifi%E2%80%99s-h2-database"
+  - label: "SSH key backup in support bundles"
+    anchor: "post-exploitation-as-nifi"
+  - label: "Operations manual explains the window"
+    anchor: "lateral-movement-to-operator"
+  - label: "Drive the PLC over OPC-UA to root"
+    anchor: "privilege-escalation-%E2%80%94-driving-the-plc-over-opc-ua"
 ---
 
 Helix is a medium-difficulty Linux machine themed around an industrial automation company. The box simulates a small OT environment: Apache NiFi for data flow, an OPC-UA server fronting a PLC simulator, a safety controller, and an HMI dashboard. The intended path depends more on understanding process behaviour than on any single exploit, and it punished me for every assumption I made before reading the documentation on the box.

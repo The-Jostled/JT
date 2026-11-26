@@ -7,6 +7,17 @@ os: Linux
 category: Offense
 summary: "Pre-auth RCE in a healthcare integration engine, a PBKDF2 hash that only cracks with the right iteration count, and a root-owned Flask service that evaluates patient names as Python."
 tags: [mirth-connect, cve-2023-43208, xstream, pbkdf2, hashcat, eval-injection, flask]
+attackPath:
+  - label: "Fingerprint Mirth Connect 4.4.0"
+    anchor: "reconnaissance"
+  - label: "XStream deserialization RCE"
+    anchor: "initial-access-%E2%80%94-cve-2023-43208"
+  - label: "mirth.properties to MariaDB"
+    anchor: "credential-extraction"
+  - label: "Crack the PBKDF2 hash"
+    anchor: "cracking-the-hash-%E2%80%94-the-detail-that-matters"
+  - label: "eval() sink in a root service"
+    anchor: "privilege-escalation-%E2%80%94-python-f-string-into-eval()"
 ---
 
 Interpreter is built around **Mirth Connect 4.4.0**, NextGen Healthcare's open-source HL7 integration engine. It's a realistic target: Mirth sits in a lot of hospital networks, and the vulnerabilities on this box are the kind that actually show up there — an unauthenticated deserialization bug, plaintext database credentials in a config file, and a home-grown notification service with an `eval()` in it.

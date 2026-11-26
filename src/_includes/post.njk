@@ -15,6 +15,7 @@ layout: base.njk
     </dl>
     {% if tags %}<ul class="tags">{% for t in tags %}<li>{{ t }}</li>{% endfor %}</ul>{% endif %}
   </header>
+  {% if attackPath %}{% include "attack-path.njk" %}{% endif %}
   <div class="prose">
     {{ content | safe }}
   </div>

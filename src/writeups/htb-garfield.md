@@ -7,6 +7,19 @@ os: Windows
 category: Offense
 summary: "An assume-breach Active Directory box: an attribute-level ACL that BloodHound doesn't show, RBCD into a read-only domain controller, and a Password Replication Policy abused to forge a ticket the primary DC accepts."
 tags: [active-directory, rodc, rbcd, golden-ticket, bloodyad, impacket, rubeus, chisel, kerberos]
+attackPath:
+  - label: "Logon script via scriptPath write"
+    anchor: "foothold-%E2%80%94-logon-script-abuse"
+  - label: "ForceChangePassword to WinRM"
+    anchor: "lateral-movement-%E2%80%94-forcechangepassword"
+  - label: "RBCD to SYSTEM on RODC01"
+    anchor: "privilege-escalation-%E2%80%94-rbcd-into-the-rodc"
+  - label: "Dump the RODC krbtgt key"
+    anchor: "dumping-the-rodc%E2%80%99s-krbtgt"
+  - label: "Modify the Password Replication Policy"
+    anchor: "domain-compromise-%E2%80%94-the-rodc-golden-ticket"
+  - label: "RODC golden ticket, then DCSync"
+    anchor: "domain-compromise-%E2%80%94-the-rodc-golden-ticket"
 ---
 
 Garfield is an assume-breach Active Directory box with two domain controllers: `DC01`, the writable DC you can reach, and `RODC01`, a read-only domain controller on an internal subnet. The chain runs through six distinct techniques, and the starting point is a single attribute write that BloodHound never surfaced. This one taught me more about Kerberos than anything before it, mostly through things going wrong.

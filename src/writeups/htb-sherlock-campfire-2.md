@@ -7,6 +7,15 @@ os: Windows
 category: Defense
 summary: "One security.evtx from a domain controller, one anomalous Event ID 4768, and a compromised account identified from the source IP. Plus the tooling fight that came before any of it."
 tags: [dfir, kerberos, as-rep-roasting, event-logs, evtx, blue-team]
+attackPath:
+  - label: "Convert the EVTX to XML"
+    anchor: "getting-a-working-toolchain-first"
+  - label: "Filter Event ID 4768"
+    anchor: "the-event-that-matters%3A-4768"
+  - label: "Trace the source IP to an account"
+    anchor: "who-sent-it"
+  - label: "Findings and containment"
+    anchor: "findings"
 ---
 
 Forela's security team got an alert that an old, supposedly inactive admin account had requested a Kerberos ticket from the domain controller. The working theory was AS-REP roasting: if an account has Kerberos pre-authentication disabled, anyone on the network can request an encrypted ticket for it without knowing the password, take it offline, and crack it.
